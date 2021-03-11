@@ -1,0 +1,14 @@
+
+<!--This login extends the base template from django-->
+{% block content %}
+<h2>Mystery Inc.</h2>
+<p align="center"><font size=12>Storyboard Creator</font></p>
+<!--The post method is used to change the database on the web app-->
+<form method="post" align = "center">
+  {% csrf_token %}
+  {{ form.as_p }}
+<!--  Sign in and log in buttons that redirect/submit to appropriate locations-->
+  <button type="submit">Log In</button>
+  <a href="{% url 'signup'%}"><button type="button" class="btn btn-default">Sign Up</button>
+</form>
+{% endblock %}

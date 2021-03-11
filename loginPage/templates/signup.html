@@ -1,0 +1,23 @@
+<!--This html file is used to render the sign up web page to create a user account-->
+{% block content %}
+  <h2>Sign up</h2>
+<!--  Post form is used to input data from user into sqlite DB-->
+  <form method="post">
+    {% csrf_token %}
+<!--    for each field in the form print out an input and check for errors-->
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+<!--    create submit button for sign up form -->
+    <button type="submit">Sign up</button>
+  </form>
+{% endblock %}
