@@ -20,7 +20,7 @@
                id = "title"
                value = ""
                maxlength = "20"/>
-        <p class="Story_Title">Author:<u> {{ author_name }}</u></p>
+        <p class="Story_Title">Author:<u> {{ user.username }}</u></p>
 
     </div>
     <!------------------------------------------------------------------------------->
@@ -30,10 +30,10 @@
         (unimplemented), and adding a new clue to the story board(unimplemented)-->
     <div class="Button_Bar">
 
-        <button onclick="return_to_home();">return</button>
-        <button onclick="start_new_story();">New</button>
-        <button onclick="save_story();">Save</button>
-        <button onclick="load_story();">Load</button>
+        <button onclick="return_to_home();">Return Home</button>
+        <button onclick="start_new_story();">New Story</button>
+        <button onclick="save_story();">Save Story</button>
+        <button onclick="load_story();">Load Story</button>
         <button onclick="add_clue();">Add Clue</button>
 
     </div>
