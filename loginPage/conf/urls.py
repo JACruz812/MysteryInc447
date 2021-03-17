@@ -19,12 +19,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.views.generic.base import TemplateView
-from . import views as login_views
+from . import views as views
+
 # Below is a list of the urls used for the login page
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls'), name='accounts'),
-    path('accounts/login/', login_views.login, name='login'),
+    path('accounts/login/', views.login, name='login'),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
-    path('signup/', login_views.signup, name='signup'),
+    path('signup/', views.signup, name='signup'),
+    path('new_story/', views.new_story, name="new_story"),
+    path('load_story/', views.load_story, name="load_story"),
+    path('storycreator/', views.storyboard, name="storyboard")
 ]

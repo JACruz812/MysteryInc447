@@ -1,6 +1,32 @@
+<!DOCTYPE html>
 {% block content %}
 {% if user.is_authenticated %}
   Hi {{ user.username }}!
+
+  <html lang="en">
+       <!-- Todo: add ability to load a story or create a new story-->
+        <!-- The buttons currently redirect to new pages -->
+      <head>
+          <meta charset="UTF-8">
+          <title>Home</title>
+      </head>
+      <body>
+          <div class="container" style="text-align: center;">
+              Welcome to the Mystery Inc Story Creator!<br/>
+              To get started creating your story or to edit an existing story please press on the corresponding button below <br/>
+          </div>
+          <form action="{%url 'new_story'%}" method="post">
+              {% csrf_token %}
+              <input type='submit' value='Create a new story'>
+          </form>
+          <form action="{%url 'load_story'%}" method="post">
+              {% csrf_token %}
+              <input type='submit' value='Continue a Story'>
+          </form>
+      </body>
+  </html>
+
+
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">Log In</a>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storyboard</title>
+    <link rel="stylesheet" href="/static/css/storyboard.css">
+    <script src="/static/js/storyboard.js"></script>
+</head>
+<body>
+
+    <!--This section displays the stories title(editable) and author(non-editable)
+        for the creator to view and alter when needed-->
+    <div class="Story_Title">
+
+        <label class="Story_Title"><b>Title:</b></label>
+        <!--will need to alter its starting value when being able to start a previously
+            created story-->
+        <input class="Story_Title"
+               type = "text"
+               id = "title"
+               value = ""
+               maxlength = "20"/>
+        <p class="Story_Title">Author:<u> {{ author_name }}</u></p>
+
+    </div>
+    <!------------------------------------------------------------------------------->
+
+    <!--This section contains the action buttons allowing for the creation of a new
+        story(partially completed), saving a story(unimplemented), loading a story
+        (unimplemented), and adding a new clue to the story board(unimplemented)-->
+    <div class="Button_Bar">
+
+        <button onclick="return_to_home();">return</button>
+        <button onclick="start_new_story();">New</button>
+        <button onclick="save_story();">Save</button>
+        <button onclick="load_story();">Load</button>
+        <button onclick="add_clue();">Add Clue</button>
+
+    </div>
+    <!------------------------------------------------------------------------------->
+
+    <div class="description">
+
+        <h2 class="description">Synopsis</h2>
+
+            <textarea id = "synopsis"
+                      rows = "6"
+                      cols = "100"
+                      maxlength = "500"></textarea>
+
+        <p class="description">
+            500 character limit
+        </p>
+
+    </div>
+
+    <!--Will hopefully be altered once clues can be added to the storyboard but for now
+        it shall remain empty however it may prove useless depending on how clues are added-->
+    <div class="Clue_Container">
+
+    </div>
+    <!------------------------------------------------------------------------------->
+
+</body>
+</html>
