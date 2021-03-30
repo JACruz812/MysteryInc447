@@ -17,11 +17,11 @@
           </div>
           <form action="{%url 'new_story'%}" method="post">
               {% csrf_token %}
-              <input type='submit' value='Create a new story'>
+              <input type='submit' value='Create a new story' id="submitButton">
           </form>
           <form action="{%url 'load_story'%}" method="post">
               {% csrf_token %}
-              <input type='submit' value='Continue a Story'>
+              <input type='submit' value='Continue a Story' id="continueButton">
           </form>
       </body>
   </html>

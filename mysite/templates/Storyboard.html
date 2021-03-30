@@ -30,7 +30,7 @@
         (unimplemented), and adding a new clue to the story board(unimplemented)-->
     <div class="Button_Bar">
 
-        <button onclick="return_to_home();">Return Home</button>
+        <a href="{% url 'return_home'%}"><button onclick="return_to_home();" id="returnHomeButton">Return Home</button>
         <button onclick="start_new_story();">New Story</button>
         <button onclick="save_story();">Save Story</button>
         <button onclick="load_story();">Load Story</button>
