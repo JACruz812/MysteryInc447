@@ -1,65 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <!--This is temporary since the links are no longer working will try and
+        fix this later-->
+
+    <style>
+
+        div.Story_Title {
+            text-align: center;
+        }
+        label.Story_Title {
+            font-size: 30px;
+        }
+        input.Story_Title {
+            font-size: 30px;
+        }
+        p.Story_Title {
+            font-size: 20px
+        }
+
+        div.Button_Bar {
+            border-style: double;
+        }
+
+        div.description {
+            text-align: center;
+        }
+        p.description {
+            font-size: 12px;
+        }
+        textarea.synopsis {
+            resize: none;
+        }
+
+        textarea.clue_list {
+            resize: none;
+        }
+
+        .clue_img {
+            transition: transform .2s;
+        }
+
+        .clue_img:hover {
+            transform: scale(2);
+        }
+
+        div.Story_Title {
+            background-color: white;
+            top: 0px;
+            width: 100%;
+            position: fixed;
+        }
+        div.Button_Bar {
+            background-color: white;
+            top: 95px;
+            width: 100%;
+            position: fixed;
+        }
+        div.main {
+            margin-top:130px;
+        }
+
+
+    </style>
+
+    <script>
+
+        // This function will take the user back to their homepage without saving
+        // their progress on the current story thus all progress will be lost
+        // will gain functionality once other pages are added into the same project
+        // and function properly
+        function return_to_home() {
+
+            if(confirm("Are you sure you wish to return to the home screen? You will lose " +
+                       "all unsaved progress on current story.")) {
+
+                location.replace("{%url 'home'%}");
+
+            }
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // This function will create a new story by clearing all attributes on the
+        // storyboard such as its title,synopsis, and clues (Currently clues cannot be
+        // added thus they removal shall be added later once added remove this comment
+        // section)
+        function start_new_story() {
+
+            // Confirms if the user means to start a new story before clearing the storyboard
+            if(confirm("Are you sure you wish to start a new story? You will lose " +
+                       "all unsaved progress on current story.")) {
+
+                //redirects to new_story view and performs actions there
+                location.replace("{%url 'new_story'%}");
+
+            }
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // Shall take all the information stored within the storyboard and save it
+        // either to a text file on the users PC or to the database linked to the
+        // users account
+        function save_story() {
+
+            alert("You're attempting to save, sorry but that's not implemented yet " +
+                  "so have fun memorizing all your progress!!");
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // Shall read in information from a selected story and propagate the storyboard
+        // with its information not sure if it will try to read from the database thus
+        // providing a list of stories or asking for the stories name or load in from a
+        // text file that is stored on the users PC
+        function load_story() {
+
+            alert("You're attempting to load in a previously created story, sorry but " +
+                  "that's not implemented yet so have fun typing it all out again!!");
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // Shall add a clue to the storyboard without clearing any of the information that
+        // already exists within the storyboard will be implemented after clue objects have
+        // been properly created
+        function add_clue() {
+
+        //    alert("You're attempting to add a clue to the storyboard, sorry but that's " +
+        //          "not implemented yet so have fun with the synopsis!!");
+
+
+            document.story.action="{% url 'add_clue' %}";
+
+            document.getElementById("story").submit();
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        //Shall remove all the marked clues from the storyboard along with lowering their clue
+        //number after a confirmation message
+        function remove_clue() {
+
+            if(confirm("Are you sure that you wish to remove the selected clues" +
+               "? This action cannot be reversed once done.")) {
+
+                document.story.action="{% url 'remove_clue' %}";
+
+                document.getElementById("story").submit();
+
+            }
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        //Refreshes the storyboard so that any added images are made visible after the url
+        //has been entered
+        function refresh_story() {
+
+            document.story.action="{% url 'refresh_story' %}";
+
+            document.getElementById("story").submit();
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
+
+    </script>
+
+    <!------------------------------------------------------------------------>
+
     <meta charset="UTF-8">
     <title>Storyboard</title>
-    <link rel="stylesheet" href="/static/css/storyboard.css">
-    <script src="/static/js/storyboard.js"></script>
+    <!--These links are no longer working they worked previously on 3/29/21 however on
+        3/30/21 when the data in the links was altered no changes were noticed by the webpage
+        these changes were then removed and files restored to previous working version and on
+        3/31/21 the links failed to work entirely leading to the info being moved into the html file-->
+<!--    <link rel="stylesheet" type="text/css" href="../../static/css/storyboard.css">
+    <script src="../../static/js/storyboard.js"></script>
+-->
 </head>
 <body>
 
-    <!--This section displays the stories title(editable) and author(non-editable)
-        for the creator to view and alter when needed-->
-    <div class="Story_Title">
+    <form id="story" name="story" method="post" onsubmit="return false;">
 
-        <label class="Story_Title"><b>Title:</b></label>
-        <!--will need to alter its starting value when being able to start a previously
-            created story-->
-        <input class="Story_Title"
-               type = "text"
-               id = "title"
-               value = ""
-               maxlength = "20"/>
-        <p class="Story_Title">Author:<u> {{ user.username }}</u></p>
+        {% csrf_token %}
 
-    </div>
-    <!------------------------------------------------------------------------------->
+        <!--This section displays the stories title(editable) and author(non-editable)
+            for the creator to view and alter when needed-->
+        <div class="Story_Title">
 
-    <!--This section contains the action buttons allowing for the creation of a new
-        story(partially completed), saving a story(unimplemented), loading a story
-        (unimplemented), and adding a new clue to the story board(unimplemented)-->
-    <div class="Button_Bar">
+            <label class="Story_Title"><b>Title:</b></label>
+            <!--will need to alter its starting value when being able to start a previously
+                created story-->
+            <input class="Story_Title"
+                   type = "text"
+                   id = "title"
+                   name = "title"
+                   value = "{{title}}"
+                   maxlength = "20"
+                   autocomplete="off"/>
+            <p class="Story_Title">Author:<u> {{ user.username }}</u></p>
 
-        <a href="{% url 'return_home'%}"><button onclick="return_to_home();" id="returnHomeButton">Return Home</button>
-        <button onclick="start_new_story();">New Story</button>
-        <button onclick="save_story();">Save Story</button>
-        <button onclick="load_story();">Load Story</button>
-        <button onclick="add_clue();">Add Clue</button>
+        </div>
+        <!------------------------------------------------------------------------------->
 
-    </div>
-    <!------------------------------------------------------------------------------->
+        <!--This section contains the action buttons allowing for the creation of a new
+            story(partially completed), saving a story(unimplemented), loading a story
+            (unimplemented), and adding a new clue to the story board(unimplemented)-->
+        <div class="Button_Bar">
 
-    <div class="description">
+            <button id="home" onclick="return_to_home();" type="button">Return Home</button>
+            <button id="new_story" onclick="start_new_story();" type="button">New Story</button>
+            <button id="save" onclick="save_story();" type="button">Save Story</button>
+            <button id="load" onclick="load_story();" type="button">Load Story</button>
+            <button id="add" onclick="add_clue();" type="button">Add Clue</button>
+            <button id="remove" onclick="remove_clue();" type="button">Remove Clue</button>
+            <button id="refresh" onclick="refresh_story();" type="button">Refresh Story</button>
 
-        <h2 class="description">Synopsis</h2>
+        </div>
+        <!------------------------------------------------------------------------------->
 
-            <textarea id = "synopsis"
-                      rows = "6"
-                      cols = "100"
-                      maxlength = "500"></textarea>
+        <div class="main">
+            <div class="description">
 
-        <p class="description">
-            500 character limit
-        </p>
+                <h2 class="description">Synopsis</h2>
 
-    </div>
+                    <textarea class = "synopsis"
+                              id = "synopsis"
+                              name = "synopsis"
+                              rows = "6"
+                              cols = "100"
+                              maxlength = "500">{{synopsis}}</textarea>
 
-    <!--Will hopefully be altered once clues can be added to the storyboard but for now
-        it shall remain empty however it may prove useless depending on how clues are added-->
-    <div class="Clue_Container">
+                <p class="description">
+                    500 character limit for synopsis</br>
+                    1000 character limit for clues
+                </p>
 
-    </div>
-    <!------------------------------------------------------------------------------->
+            </div>
 
+            <!--Will hopefully be altered once clues can be added to the storyboard but for now
+                it shall remain empty however it may prove useless depending on how clues are added-->
+            <div class="Clue_Container">
+
+                {% for clue in clues %}
+
+                    <p><b>Clue {{clue.clue_num}}</b></p>
+
+                    <textarea class = "clue_list"
+                              id = "clue{{clue.clue_num}}_text"
+                              name = "clue{{clue.clue_num}}_text"
+                              rows = "11"
+                              cols = "100"
+                              maxlength = "1000">{{clue.clue_text}}</textarea>
+
+                    <img class="clue_img" src="{{clue.clue_img_url}}" height="170px">
+
+                    </br>
+
+                    <p>URL: <input class="clue_list"
+                                   type="text"
+                                   id="clue{{clue.clue_num}}_img_url"
+                                   name="clue{{clue.clue_num}}_img_url"
+                                   value="{{clue.clue_img_url}}"
+                                   autocomplete="off"/>
+
+                        <input type="hidden", id="clue{{clue.clue_num}}_hidden" name="clue{{clue.clue_num}}_remove" value="Safe">
+                        <input type="checkbox", id="clue{{clue.clue_num}}_remove" name="clue{{clue.clue_num}}_remove" value="Remove">
+                        <label>Remove</label>
+                    </p>
+
+                {% endfor %}
+
+            </div>
+            <!------------------------------------------------------------------------------->
+
+        </div>
+    </form>
 </body>
 </html>
