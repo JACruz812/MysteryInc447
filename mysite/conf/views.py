@@ -1,3 +1,4 @@
+
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
@@ -20,6 +21,7 @@ def signup(request):
         form = UserCreationForm()
     #return the form to signup.html to handle if error
    return render(request, 'signup.html', {'form': form})
+
 #This view function is used when signout is called
 def signout(request):
     logout(request)
@@ -33,22 +35,9 @@ def load_story(request):
     return render(request, 'Storyboard.html', context={})
 
 def storyboard(request):
-    # First checks to see if the username exists in the database
-    # try:
-    #     user = user.username
-    # except User.DoesNotExist:
-    #     raise Http404("User does not exist")
-    # # Checks to see if the username corresponds to the logged in user
-    # # if it does then progress to the storyboard else alert user to
-    # # the error
-    # if user.username == selected.username:
-    #     author_name = user.username
-    #     context = {
-    #         'author_name': author_name,
-    #     }
-    #     # may need to alter path once files are being merged in github
         return render(request, 'Storyboard.html', context={})
-    # else:
-    #     raise Http404("Username does not match logged in user")
+
+def return_home(request):
+    return render(request, 'home.html', context={})
 
 

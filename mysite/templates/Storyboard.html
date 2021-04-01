@@ -7,12 +7,14 @@
     <script src="/static/js/storyboard.js"></script>
 </head>
 <body>
+
     <form method="post" style="text-align: right;">
         {% csrf_token %}
         {{ form.as_p }}
         <!-- Logout Button, redirects to the login page after logging out the user-->
         <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
     </form>
+
     <!--This section displays the stories title(editable) and author(non-editable)
         for the creator to view and alter when needed-->
     <div class="Story_Title">
@@ -35,11 +37,13 @@
         (unimplemented), and adding a new clue to the story board(unimplemented)-->
     <div class="Button_Bar">
 
-        <button onclick="return_to_home();" id='returnHomeButton'>Return Home</button>
-        <button onclick="start_new_story();" id='newStoryButton'>New Story</button>
-        <button onclick="save_story();" id='saveStoryButton'>Save Story</button>
-        <button onclick="load_story();" id='loadStoryButton'>Load Story</button>
-        <button onclick="add_clue();" id='addClueButton'>Add Clue</button>
+
+        <a href="{% url 'return_home'%}"><button onclick="return_to_home();" id="returnHomeButton">Return Home</button>
+        <button onclick="start_new_story();">New Story</button>
+        <button onclick="save_story();">Save Story</button>
+        <button onclick="load_story();">Load Story</button>
+        <button onclick="add_clue();">Add Clue</button>
+
 
     </div>
     <!------------------------------------------------------------------------------->
