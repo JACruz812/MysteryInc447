@@ -31,5 +31,7 @@ urlpatterns = [
     path('new_story/', views.new_story, name="new_story"),
     path('load_story/', views.load_story, name="load_story"),
     path('storycreator/', views.storyboard, name="storyboard"),
-    path('return_home/', views.return_home, name="return_home")
+    path('addclue/', views.add_clue, name="add_clue"),
+    path('removeclue/', views.remove_clue, name="remove_clue"),
+    path('refresh/', views.refresh_story, name="refresh_story")
 ]
