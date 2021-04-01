@@ -1,13 +1,16 @@
-Hello, this is a project for CMSC447.
-The purpose of this project is to be a storyboard that authors can use to write mysteries and build clues.
-The first iteration I (Tony Cruz) worked on the login/sign-up page for the storyboard site.
-A majority of my time was spent researching django applications and reading through tutorials.
-
-Testing: the test for this project so far is done manually by the user. This can be done by running the login page application
-    using the steps below and creating an account/logging in.
-
 Run Steps:
 1) run the line "Pip install -r requirements.txt" in the terminal to download dependencies
 2) cd into the MysteryInc/loginPage/ directory
 3) run the line "python manage.py runserver" in the terminal to stand up web page
 4) in a web browser enter the url "http://127.0.0.1:8000/accounts/login/" and proceed with testing the application
+
+Testing Steps:
+Testing is done using Selenium with the chromium driver. The chromium driver requires that Google Chrome is installed.
+1)Ensure you have Google Chrome installed and the chromium driver downloaded
+2)Ensure that the executeable path in line 5 of tests.py matches where the chromiumdriver.exe is located on your device
+3)setup the webpage
+    - if you are in the MysteryInc/loginPage/ directory run "python manage.py runserver" in the terminal
+    - if you are in the MysteryInc directory run "python loginPage\manage.py runserver" in the terminal
+4)run the tests
+   4a)cd into the MysteryInc directory
+   4b)run "python loginPage\manage.py test" in the terminal
