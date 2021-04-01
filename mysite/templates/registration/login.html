@@ -8,7 +8,7 @@
   {% csrf_token %}
   {{ form.as_p }}
 <!--  Sign in and log in buttons that redirect/submit to appropriate locations-->
-  <button type="submit">Log In</button>
-  <a href="{% url 'signup'%}"><button type="button" class="btn btn-default">Sign Up</button>
+  <button type="submit" id="loginButton">Log In</button>
+  <a href="{% url 'signup'%}"><button type="button" class="btn btn-default" id="signupButton">Sign Up</button>
 </form>
 {% endblock %}
