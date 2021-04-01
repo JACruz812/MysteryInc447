@@ -10,18 +10,31 @@
           <meta charset="UTF-8">
           <title>Home</title>
       </head>
+
+      <div class="nav">
+      
+    </div>
       <body>
+          <form method="post" style="text-align: right;">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <!-- Logout Button, redirects to the login page after logging out the user-->
+                <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
+          </form>
+
           <div class="container" style="text-align: center;">
               Welcome to the Mystery Inc Story Creator!<br/>
               To get started creating your story or to edit an existing story please press on the corresponding button below <br/>
           </div>
           <form action="{%url 'new_story'%}" method="post">
               {% csrf_token %}
+
               <input type='submit' value='Create a new story' id="submitButton">
           </form>
           <form action="{%url 'load_story'%}" method="post">
               {% csrf_token %}
               <input type='submit' value='Continue a Story' id="continueButton">
+
           </form>
       </body>
   </html>

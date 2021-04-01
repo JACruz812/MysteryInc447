@@ -1,4 +1,5 @@
-from django.contrib.auth import login, authenticate
+
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -43,6 +44,11 @@ def signup(request):
     #return the form to signup.html to handle if error
    return render(request, 'signup.html', {'form': form})
 
+#This view function is used when signout is called
+def signout(request):
+    logout(request)
+    #redirect to the login page after the user is logged out
+    return redirect('login')
 def index(request):
     return render(request, 'index.html', context={})
    
@@ -155,4 +161,5 @@ def refresh_story(request):
         ######################################################################
 
     return HttpResponseRedirect(reverse('storyboard'))
+
 
