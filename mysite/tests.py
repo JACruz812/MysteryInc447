@@ -92,7 +92,58 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element_by_id('loginButton').click() #click sign up
         time.sleep(2)
 
+        # Sets the title and synopsis values to a default allowing for visual on
+        # if they are saved on refresh
+        self.selenium.find_element_by_id('title').send_keys('new story')
+        time.sleep(1)
+        self.selenium.find_element_by_id('synopsis').send_keys('This is a new story testing adding and removing clues.')
+        time.sleep(1)
 
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue1_text').send_keys('This is clue 1')
+        time.sleep(1)
+
+        # Adds a new clue that contains both text and an image
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue2_text').send_keys('This is clue 2')
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue2_img_url').send_keys('https://media.tenor.com/images/1ef18fe44fec6a28182fe0b60d2e9e94/tenor.gif')
+        time.sleep(1)
+
+        # Refreshes the content on the webpage so the image will be presented
+        self.selenium.find_element_by_id('refresh').click()
+        time.sleep(1)
+
+        # Adds another clue that only contains text
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue3_text').send_keys('This is clue 3')
+        time.sleep(1)
+
+        # Marks the first and third clues for removal
+        self.selenium.find_element_by_id('clue1_remove').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue3_remove').click()
+        time.sleep(1)
+
+        # Fully removes all marked clues from the story
+        self.selenium.find_element_by_id('remove').click()
+        time.sleep(1)
+
+        # Focus on the alert and accept
+        self.selenium.switch_to.alert.accept()
+        time.sleep(1)
+
+        # Click the new story button and accept
+        self.selenium.find_element_by_id('new_story').click()
+        time.sleep(1)
+
+        # Focus on the alert and accept
+        self.selenium.switch_to.alert.accept()
+        time.sleep(1)
 
 
 
