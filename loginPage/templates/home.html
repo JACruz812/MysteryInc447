@@ -18,7 +18,7 @@
                 {% csrf_token %}
                 {{ form.as_p }}
                 <!-- Logout Button, redirects to the login page after logging out the user-->
-                <a href="{% url 'signout'%}"><button type="button" class="btn btn-default">Log Out</button></a>
+                <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
           </form>
           <div class="container" style="text-align: center;">
               Welcome to the Mystery Inc Story Creator!<br/>
@@ -26,11 +26,11 @@
           </div>
           <form action="{%url 'new_story'%}" method="post">
               {% csrf_token %}
-              <input type='submit' value='Create a new story'>
+              <input type='submit' value='Create a new story' id='submitButton'>
           </form>
           <form action="{%url 'load_story'%}" method="post">
               {% csrf_token %}
-              <input type='submit' value='Continue a Story'>
+              <input type='submit' value='Continue a Story' id='continueButton'>
           </form>
       </body>
   </html>
