@@ -28,8 +28,10 @@ urlpatterns = [
     path('accounts/login/', views.login, name='login'),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('signup/', views.signup, name='signup'),
+    path('signout/',views.signout,name='signout'),
     path('new_story/', views.new_story, name="new_story"),
     path('load_story/', views.load_story, name="load_story"),
     path('storycreator/', views.storyboard, name="storyboard"),
     path('return_home/', views.return_home, name="return_home")
+
 ]
