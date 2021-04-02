@@ -81,7 +81,9 @@ class MySeleniumTests(StaticLiveServerTestCase):
         time.sleep(2)
         
         #test using the new login
-        self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
+        self.selenium.switch_to.alert.accept()
+        time.sleep(1)
+        self.selenium.find_element_by_id('logoutButton').click() #logout from home page
         id_input = self.selenium.find_element_by_id('id_username') #set id_input var
         pass_input = self.selenium.find_element_by_id('id_password') #set pass_input var
         id_input.clear()
