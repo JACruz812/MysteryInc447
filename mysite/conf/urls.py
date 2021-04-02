@@ -34,5 +34,7 @@ urlpatterns = [
     path('storycreator/', views.storyboard, name="storyboard"),
     path('addclue/', views.add_clue, name="add_clue"),
     path('removeclue/', views.remove_clue, name="remove_clue"),
-    path('refresh/', views.refresh_story, name="refresh_story")
+    path('refresh/', views.refresh_story, name="refresh_story"),
+    path('display_clues/', views.display_clues, name="display_clues"),
+    path('return_to_editor/', views.return_to_editor, name="return_to_editor")
 ]
