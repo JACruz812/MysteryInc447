@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visual Display</title>
+</head>
+<body>
+    <body>
+        <div class="container" style="text-align: center;">
+            The existing clues can be seen connected below. To edit or add clues, please return to the Storyboard Editor. <br/>
+        </div>
+       <form action="{%url 'return_to_editor'%}" method="post">
+            {% csrf_token %}
+            <input type='submit' value='Return to Storyboard Editor'>
+        </form>
+        
+    </body>
+
+</body>
+</html>
