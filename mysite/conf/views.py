@@ -162,4 +162,12 @@ def refresh_story(request):
 
     return HttpResponseRedirect(reverse('storyboard'))
 
+# allows user to go back to the Storyboard editor from the visually displayed clues page
+def return_to_editor(request):
+   return render(request, 'Storyboard.html', context={})
+
+# allows user to access visual clues page
+def display_clues(request):
+    return render(request, 'display_clues.html', context={})
+
 
