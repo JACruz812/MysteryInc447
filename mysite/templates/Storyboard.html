@@ -228,7 +228,11 @@
 
         </div>
         <!------------------------------------------------------------------------------->
-
+        <form action="{%url 'display_clues'%}" method="post">
+            {% csrf_token %}
+            <input type='submit' value='Display Clues'>
+        </form>
+        
         <div class="main">
             <div class="description">
 
