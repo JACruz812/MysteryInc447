@@ -225,13 +225,10 @@
             <button id="add" onclick="add_clue();" type="button">Add Clue</button>
             <button id="remove" onclick="remove_clue();" type="button">Remove Clue</button>
             <button id="refresh" onclick="refresh_story();" type="button">Refresh Story</button>
+            <button id="display_clues" onclick="display_clues();" type="button">Display Clues</button>
 
         </div>
         <!------------------------------------------------------------------------------->
-        <form action="{%url 'display_clues'%}" method="post">
-            {% csrf_token %}
-            <input type='submit' value='Display Clues'>
-        </form>
         
         <div class="main">
             <div class="description">
