@@ -24,6 +24,7 @@ class Story:
     clue_amount = 0
     clue_id_tracker = 0 # will keep track of overall number of clues that have existed, regardless of how many remain
     Clues = []
+    removed_ids = []
 
 
 global temp_story
@@ -131,6 +132,7 @@ def remove_clue(request):
             if request.POST['clue' + str(x.clue_num) + '_remove'] == "Remove":
                 marked.append(int(x.clue_num) - 1)
                 marked.append(int(x.clue_id)) # idk if I will need this to be -1 or if this is at all helpful
+                temp_story.removed_ids.append(x.clue_id)
 
         # Loop through the marked list and remove the corresponding clue from Clue list in
         # temp_story
@@ -139,9 +141,9 @@ def remove_clue(request):
 
             # remove the list of parent clues if needed, not sure it is
 
-             # for i in temp_clue.num_parents:
-                # figure out if this is a deep or shallow copy
-               # temp_clue.parent_clues.remove()
+            # for i in temp_clue.num_parents:
+            # figure out if this is a deep or shallow copy
+            # temp_clue.parent_clues.remove()
 
             # remove the clue from the list
             temp_story.Clues.remove(temp_clue)
