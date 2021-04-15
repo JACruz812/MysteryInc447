@@ -125,6 +125,16 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element_by_id('clue3_text').send_keys('This is clue 3')
         time.sleep(1)
 
+        # testing that clues are connected properly
+
+        # there should already be 3 clues at this point
+
+        # mark them for connection somehow
+
+        # check that they are connected
+
+
+
         # Marks the first and third clues for removal
         self.selenium.find_element_by_id('clue1_remove').click()
         time.sleep(1)
@@ -146,6 +156,10 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # Focus on the alert and accept
         self.selenium.switch_to.alert.accept()
         time.sleep(1)
+
+
+
+        
 
 
 

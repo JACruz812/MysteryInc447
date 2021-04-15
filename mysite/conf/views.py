@@ -139,7 +139,7 @@ def remove_clue(request):
 
             # remove the list of parent clues if needed, not sure it is
 
-            # for i in temp_clue.num_parents:
+             # for i in temp_clue.num_parents:
                 # figure out if this is a deep or shallow copy
                # temp_clue.parent_clues.remove()
 
@@ -177,24 +177,11 @@ def remove_clue(request):
 # allows user to connect two clues together
 def connect_clue(request):
 
-    #clue[number]_parent
-    #clue[number]
-
-    #refresh story
-    #comment clue+string + quote_text
-
-    # assume we have the child, want to give it a parent
-
-    # have a list of already connected parent clues
-    # assume we have the number of the parent and child clues to be connected somehow
-        # likely through an input box where they enter the clue number of the parent they want to connect it to
-        # also assuming clues are in the story list in numerical order
-
-    # assume there is a list of desired parent clues, and that the parent clues are clue numbers
-
-    # get the desired parent clue from the clue list in the story
-
     if request.method == 'POST':
+
+
+        # im assuming this is how I get the parent and child
+         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
 
         # Accesses the temp story that contains all of the clues that need to be connected
         global temp_story
@@ -202,44 +189,35 @@ def connect_clue(request):
         temp_story.synopsis = request.POST['synopsis']
         ######################################################################
 
-        # get parent clue, will need to do verification that this is the correct clue later on when I figure out how we are getting the information
-        # verify using id numbers
-        parent_clue = temp_story.Clues[parent_num]
+        parent_nums = []
+        child_nums = []
+        i = 0
 
-        # get child clue
-        child_clue = temp_story.Clues[child_num]
+        # check through all clues, find numbers that need to be connected
+        for x in temp_story.Clues:
+            # check there is both a parent and child for each clue
+            if request.POST['clue' + str(x.clue_num) + '_parent'] != NULL and request.POST['clue' + str(x.clue_num) + '_child'] != NULL:
+                # add both parent and child to the list
+                parent_nums[i] = request.POST['clue' + str(x.clue_num) + '_parent']
+                child_nums[i] = request.POST['clue' + str(x.clue_num) + '_child']
+                i += 1
 
-        # add parent clue to child clue's list
-        child_clue.parent_clues.append(parent_clue)
-        child_clue.parent_clue_ids.append(parent_clue.clue_id)
-        child_clue.num_parents += 1
+        # connect each clue
+        for i in size(parent_nums):
+            
+            # get parent clue, will need to do verification that this is the correct clue later on when I figure out how we are getting the information
+            # verify using id numbers
+            parent_clue = temp_story.Clues[parent_nums[i - 1]]
 
+            # get child clue
+            child_clue = temp_story.Clues[child_nums[i - 1]]
 
-        # ------------- old code ---------------
-
-
-        # run through each clue and make sure there is the correct number of connections
-
-        # Reads in the contents of existing clues in the storyboard and stores the content to the stories clues list
-       # for x in temp_story.Clues:
-        #    x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
-         #   x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-
-            # check if the number of desired parents is higher than that stored, fix the connections
-          #  if (x.num_partents != len(x.parent_clue_ptrs)):
-
-                # if not equal, run through the list of connections and make sure they all exist
-           #     for parent in x.parent_clue_ptrs:
-                    
-                    # connect them
-
-                    # get parent clue pointer
-                    
-                
-           
-            # need to make this save the correct
-            #x.num_parents = request.POST['clue' + str(x.clue_num) + '_text']
-
+            # add parent clue to child clue's list
+            child_clue.parent_clues.append(parent_clue)
+            child_clue.parent_clue_ids.append(parent_clue.clue_id)
+            child_clue.num_parents += 1
+            
+    return HttpResponseRedirect(reverse('storyboard'))
 
 
 def refresh_story(request):
