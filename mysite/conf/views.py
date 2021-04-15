@@ -161,6 +161,7 @@ def remove_clue(request):
             # finally actually delete the clues
             del temp_clue
 
+
             # Once the clue is removed lower the clue nums of all clues that came after
             # the removed clue
             for clue in reversed(temp_story.Clues):
