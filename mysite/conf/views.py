@@ -179,9 +179,8 @@ def connect_clue(request):
 
     if request.method == 'POST':
 
-
         # im assuming this is how I get the parent and child
-         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+        x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
 
         # Accesses the temp story that contains all of the clues that need to be connected
         global temp_story
@@ -189,34 +188,31 @@ def connect_clue(request):
         temp_story.synopsis = request.POST['synopsis']
         ######################################################################
 
-        parent_nums = []
-        child_nums = []
-        i = 0
-
         # check through all clues, find numbers that need to be connected
         for x in temp_story.Clues:
-            # check there is both a parent and child for each clue
-            if request.POST['clue' + str(x.clue_num) + '_parent'] != NULL and request.POST['clue' + str(x.clue_num) + '_child'] != NULL:
-                # add both parent and child to the list
-                parent_nums[i] = request.POST['clue' + str(x.clue_num) + '_parent']
-                child_nums[i] = request.POST['clue' + str(x.clue_num) + '_child']
-                i += 1
 
-        # connect each clue
-        for i in size(parent_nums):
-            
-            # get parent clue, will need to do verification that this is the correct clue later on when I figure out how we are getting the information
-            # verify using id numbers
-            parent_clue = temp_story.Clues[parent_nums[i - 1]]
+            # empty out list of parent clues
+            x.parent_clues = []
+            x.parent_clue_ids = []
+            x.num_parents = 0
 
-            # get child clue
-            child_clue = temp_story.Clues[child_nums[i - 1]]
+            # add back in any clues if needed
+            # may need to replace this with function Connor made
+            if request.POST['clue' + str(x.clue_num) + '_parent'] != NULL:
 
-            # add parent clue to child clue's list
-            child_clue.parent_clues.append(parent_clue)
-            child_clue.parent_clue_ids.append(parent_clue.clue_id)
-            child_clue.num_parents += 1
-            
+                # connect each parent clue
+                # NOT parent_nums, should be size of the array on the webpage
+                for i in size(parent_nums):
+                    
+                    # get parent clue, will need to do verification that this is the correct clue later on when I figure out how we are getting the information
+                    # verify using id numbers
+                    parent_clue = temp_story.Clues[parent_nums[i - 1]]
+
+                    # add parent clue to child clue's list
+                    x.parent_clues.append(parent_clue)
+                    x.parent_clue_ids.append(parent_clue.clue_id)
+                    x.num_parents += 1
+
     return HttpResponseRedirect(reverse('storyboard'))
 
 
