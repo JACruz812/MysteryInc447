@@ -274,7 +274,13 @@
                                    name="clue{{clue.clue_num}}_img_url"
                                    value="{{clue.clue_img_url}}"
                                    autocomplete="off"/>
-
+                        Parents: <input class="clue_list"
+                                   type="text"
+                                   id="clue{{clue.clue_num}}_clue_parents"
+                                   name="clue{{clue.clue_num}}_clue_parents"
+                                   value="{{clue.clue_parents}}"
+                                   autocomplete="off"
+                                   onkeypress="if (event.key.replace(/[^0123456789,]/g,'')=='') event.preventDefault();"/>
                         <input type="hidden", id="clue{{clue.clue_num}}_hidden" name="clue{{clue.clue_num}}_remove" value="Safe">
                         <input type="checkbox", id="clue{{clue.clue_num}}_remove" name="clue{{clue.clue_num}}_remove" value="Remove">
                         <label>Remove</label>
