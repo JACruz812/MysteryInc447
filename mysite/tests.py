@@ -125,18 +125,9 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.find_element_by_id('clue3_text').send_keys('This is clue 3')
         time.sleep(1)
 
-        # testing that clues are connected properly
-
-        # there should already be 3 clues at this point
-
-        # mark them for connection somehow
-
-        # check that they are connected
-
-
-
         # Marks the first and third clues for removal
         self.selenium.find_element_by_id('clue1_remove').click()
+        
         time.sleep(1)
         self.selenium.find_element_by_id('clue3_remove').click()
         time.sleep(1)
@@ -144,6 +135,10 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # Fully removes all marked clues from the story
         self.selenium.find_element_by_id('remove').click()
         time.sleep(1)
+             
+        # checks parent clues
+        clue2 = Clue.objects.get().first()
+        assertEquals(clue2.num_parents, 0)
 
         # Focus on the alert and accept
         self.selenium.switch_to.alert.accept()
