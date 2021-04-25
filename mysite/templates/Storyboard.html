@@ -106,8 +106,11 @@
         // users account
         function save_story() {
 
-            alert("You're attempting to save, sorry but that's not implemented yet " +
-                  "so have fun memorizing all your progress!!");
+            document.story.action="{% url 'save_story' %}";
+            document.getElementById("story").submit();
+
+            //alert("You're attempting to save, sorry but that's not implemented yet " +
+            //      "so have fun memorizing all your progress!!");
 
         }
         ////////////////////////////////////////////////////////////////////////////////

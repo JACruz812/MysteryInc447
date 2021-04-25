@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Clue
+# from .models import Clue
 
-admin.site.register(Clue)
+# admin.site.register(Clue)

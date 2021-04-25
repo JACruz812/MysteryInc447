@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Clue as DBClue
+from .models import Story as DBStory
 import json
 
 
@@ -11,6 +12,7 @@ import json
 # but as of right now they work since no information is being saved
 # to the database in regards to the story
 class Clue:
+    clue_id = 0
     clue_num = 0
     clue_text = ''
     clue_img_url = ''
@@ -120,31 +122,37 @@ def save_story(request):
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
         # while increasing the clue counter in the story
         global temp_story
+
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
         ######################################################################
 
-        clue_id_list = []
-        temp_parents = []
         # Reads in the contents of existing clues in the storyboard and stores the content to the stories clues list
         for x in temp_story.Clues:
-            clue_id_list.append(x.clue_id)
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            temp_parents.append(request.POST['clue' + str(x.clue_num) + '_clue_parents'])
-        ######################################################################
-        # Converts the read parent data into a list and then stores it into the associated clue object
-        for i in range(len(temp_parents)):
-            temp_story.Clues[i].clue_parents = create_list(temp_parents[i], clue_id_list)
-        ######################################################################
-        # Start saving the acquired data into the database
-        # section is for saving the story info such as title, author, synopsis and amount of clues
-        ######################################################################
-        # Section is for saving the clues of the story to the database
-        ######################################################################
         ######################################################################
 
-    return HttpResponseRedirect(reverse('storyboard'))
+        # create a story object with the title,synopsis, and clue amounts from the temp_story
+        username = request.user.username
+
+        if DBStory.objects.filter(title=temp_story.title, user=username).exists():
+            s = DBStory.objects.get(title=temp_story.title, user=username)
+            s.synopsis = temp_story.synopsis
+            s.num_clues = temp_story.clue_amount
+            s.clue_set.all().delete()
+        else:
+            s = DBStory(title=temp_story.title, synopsis=temp_story.synopsis, num_clues=temp_story.clue_amount,
+                        user=username)
+
+        s.save()
+
+        for clue in temp_story.Clues:
+            s.clue_set.create(clue_id=clue.clue_id, clue_num=clue.clue_num, clue_text=clue.clue_text,
+                              clue_img_url=clue.clue_img_url, parent_list=save_parent_list(clue.clue_parents))
+        s.save()
+
+    return HttpResponseRedirect(reverse('refresh_story'))
 
 
 def storyboard(request):
