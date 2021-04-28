@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+
+        div.Page_Title {
+            text-align: center;
+        }
+        label.Page_Title {
+            font-size: 30px;
+        }
+
+    </style>
+    <script>
+        // where the functions go
+    </script>
     <meta charset="UTF-8">
     <title>Visual Display</title>
 </head>
 <body>
-    <body>
-        <div class="container" style="text-align: center;">
-            The existing clues can be seen connected below. To edit or add clues, please return to the Storyboard Editor. <br/>
-        </div>
-       <form action="{%url 'return_to_editor'%}" method="post">
-            {% csrf_token %}
-            <input type='submit' value='Return to Storyboard Editor'>
-        </form>
-        
-    </body>
+
+    <!-- allows user to logout from display clues page -->
+    <form method="post" style="text-align: right;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <!-- Logout Button, redirects to the login page after logging out the user-->
+        <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
+    </form>
+
+
+    <!-- displays name at top of webpage-->
+    <div class="Page_Title">
+        <label class="Page_Title"><b>Visually Connected Clue Page</b></label>
+    </div>
+
+
+    <!-- displays instructions for user-->
+    <div class="container" style="text-align: center;">
+        The existing clues can be seen connected below. To edit, add, or remove clues, please return to the Storyboard Editor. <br/>
+    </div>
+
+
+    <!-- button to return to storyboard editor-->
+    <form action="{%url 'return_to_editor'%}" method="post">
+        {% csrf_token %}
+        <input type='submit' value='Return to Storyboard Editor'>
+    </form>
+
+    <!-- now I have to figure out how to display things-->
+    <!-- this might need help from the database -->
 
 </body>
 </html>
