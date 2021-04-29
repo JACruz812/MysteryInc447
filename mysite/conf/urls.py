@@ -37,5 +37,6 @@ urlpatterns = [
     path('removeclue/', views.remove_clue, name="remove_clue"),
     path('refresh/', views.refresh_story, name="refresh_story"),
     path('display_clues/', views.display_clues, name="display_clues"),
-    path('return_to_editor/', views.return_to_editor, name="return_to_editor")
+    path('return_to_editor/', views.return_to_editor, name="return_to_editor"),
+    path('create_printable/', views.create_printable, name="create_printable")
 ]

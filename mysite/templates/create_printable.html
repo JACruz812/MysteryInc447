@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Printable</title>
+    <style>
+        div.Story_Title {
+            text-align: center;
+        }
+        label.Story_Title {
+            font-size: 75px;
+        }
+        div.synopsis {
+            text-align: center;
+        }
+        label.synopsis {
+            font-size: 20px;
+        }
+        textarea.clue_list {
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+<form id="story" name="story" method="post" onsubmit="return false;">
+    <div class="Story_Title">
+        <label class="Story_Title">
+            {{title}}
+        </label>
+    </div>
+    <div class="synopsis">
+        <label class="synopsis">
+            {{synopsis}}
+        </label>
+    </div>
+
+    <div class="Clue_Container">
+
+        {% for clue in clues %}
+
+        <p><b>Clue {{clue.clue_num}}</b></p>
+
+        <textarea class = "clue_list"
+            id = "clue{{clue.clue_num}}_text"
+            name = "clue{{clue.clue_num}}_text"
+            rows = "11"
+            cols = "100"
+            maxlength = "1000">{{clue.clue_text}}</textarea>
+
+        <img class="clue_img" src="{{clue.clue_img_url}}" height="170px">
+
+        </br>
+
+
+        {% endfor %}
+
+    </div>
+
+</form>
+
+
+</body>
+</html>
