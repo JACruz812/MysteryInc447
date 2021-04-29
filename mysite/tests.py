@@ -1,6 +1,36 @@
 import time
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
+from django.test import TestCase
+from conf.models import Story, Clue
+
+
+# Holds the tests for the database tables
+class database_tests(TestCase):
+
+    # tests to see the functionality of saving and removing a story to and from the database
+    def Story_test(self):
+        s = Story(title="testing", synopsis='This is a test', num_clues=0, user='admin')
+        s.save()
+        self.assertTrue(len(Story.objects.filter(title='testing', user='admin')) == 0, msg='story correctly saved')
+        s.delete()
+        self.assertTrue(len(Story.objects.filter(title='testing', user='admin')) == 0, msg='story correctly removed')
+
+    # tests to see the functionality of saving clues within the database while having them connected to a story
+    def Clue_test(self):
+        s = Story(title="testing", synopsis='This is a test', num_clues=0, user='admin')
+        s.save()
+        self.assertTrue(len(s.clue_set.all()) == 0, msg='no clues connected to new story')
+        s.clue_set.create(clue_id=1, clue_num=1, clue_text='testing1', clue_img_url='', parent_list='[]')
+        s.clue_set.create(clue_id=2, clue_num=2, clue_text='testing2', clue_img_url='', parent_list='[]')
+        self.assertTrue(len(s.clue_set.all()) == 2, msg='clues have been saved to story')
+        c = s.clue_set.get(clue_id=1)
+        c.delete()
+        self.assertTrue(len(s.clue_set.all()) == 1, msg='single clue has been removed from story')
+        s.clue_set.all().delete()
+        self.assertTrue(len(s.clue_set.all()) == 0, msg='clues have been removed from story')
+        s.delete()
+
 
 class MySeleniumTests(StaticLiveServerTestCase):
 
@@ -18,80 +48,80 @@ class MySeleniumTests(StaticLiveServerTestCase):
     def test_site(self):
         self.selenium.get('%s%s' % (self.live_server_url, '/accounts/login/'))
         id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
-        pass_input = self.selenium.find_element_by_id('id_password') #set pass_input var
+        pass_input = self.selenium.find_element_by_id('id_password')  # set pass_input var
         id_input.clear()
         pass_input.clear()
         id_input.send_keys('johnDoe1')
         pass_input.send_keys('flowerCats')
         time.sleep(2)  # Wait 2 secs
-        self.selenium.find_element_by_id('loginButton').click() #click sign up
+        self.selenium.find_element_by_id('loginButton').click()  # click sign up
         time.sleep(2)  # Wait 2 secs
 
-        #enter signup page
-        self.selenium.find_element_by_id('signupButton').click() #test signup button
+        # enter signup page
+        self.selenium.find_element_by_id('signupButton').click()  # test signup button
         time.sleep(2)  # Wait 2 secs
 
-        #attempt inputing an invalid username
-        id_input = self.selenium.find_element_by_id('id_username') #set id_input var
-        pass1_input = self.selenium.find_element_by_id('id_password1') #set pass1_input var
-        pass2_input = self.selenium.find_element_by_id('id_password2') #set pass2_input var
+        # attempt inputing an invalid username
+        id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
+        pass1_input = self.selenium.find_element_by_id('id_password1')  # set pass1_input var
+        pass2_input = self.selenium.find_element_by_id('id_password2')  # set pass2_input var
         id_input.send_keys('|hi|')
         pass1_input.send_keys('Flowers1234')
         pass2_input.send_keys('Flowers1234')
-        self.selenium.find_element_by_id('submitButton').click() #click sign up
+        self.selenium.find_element_by_id('submitButton').click()  # click sign up
         time.sleep(2)  # Wait 2 secs
-        
-        #attempt inputing a common password
-        id_input = self.selenium.find_element_by_id('id_username') #set id_input var
-        pass1_input = self.selenium.find_element_by_id('id_password1') #set pass1_input var
-        pass2_input = self.selenium.find_element_by_id('id_password2') #set pass2_input var
+
+        # attempt inputing a common password
+        id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
+        pass1_input = self.selenium.find_element_by_id('id_password1')  # set pass1_input var
+        pass2_input = self.selenium.find_element_by_id('id_password2')  # set pass2_input var
         id_input.clear()
         id_input.send_keys('johnDoe1')
         pass1_input.send_keys('Password123')
         pass2_input.send_keys('Password123')
-        self.selenium.find_element_by_id('submitButton').click() #click sign up
+        self.selenium.find_element_by_id('submitButton').click()  # click sign up
         time.sleep(2)  # Wait 2 secs
-        
-        #attempt inputing an invalid password
-        id_input = self.selenium.find_element_by_id('id_username') #set id_input var
-        pass1_input = self.selenium.find_element_by_id('id_password1') #set pass1_input var
-        pass2_input = self.selenium.find_element_by_id('id_password2') #set pass2_input var
+
+        # attempt inputing an invalid password
+        id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
+        pass1_input = self.selenium.find_element_by_id('id_password1')  # set pass1_input var
+        pass2_input = self.selenium.find_element_by_id('id_password2')  # set pass2_input var
         id_input.clear()
         id_input.send_keys('johnDoe1')
         pass1_input.send_keys('123456789')
         pass2_input.send_keys('123456789')
-        self.selenium.find_element_by_id('submitButton').click() #click sign up
+        self.selenium.find_element_by_id('submitButton').click()  # click sign up
         time.sleep(2)  # Wait 2 secs
-        
-        #attempt inputing an invalid password
-        id_input = self.selenium.find_element_by_id('id_username') #set id_input var
-        pass1_input = self.selenium.find_element_by_id('id_password1') #set pass1_input var
-        pass2_input = self.selenium.find_element_by_id('id_password2') #set pass2_input var
+
+        # attempt inputing an invalid password
+        id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
+        pass1_input = self.selenium.find_element_by_id('id_password1')  # set pass1_input var
+        pass2_input = self.selenium.find_element_by_id('id_password2')  # set pass2_input var
         id_input.clear()
         id_input.send_keys('johnDoe1')
         pass1_input.send_keys('flowerCats')
         pass2_input.send_keys('flowerCats')
-        self.selenium.find_element_by_id('submitButton').click() #click sign up
+        self.selenium.find_element_by_id('submitButton').click()  # click sign up
         time.sleep(2)  # Wait 2 secs
-        
-        #test continue and return buttons
-        self.selenium.find_element_by_id('continueButton').click() #continue to create page
-        time.sleep(2) #wait 2 secs
-        self.selenium.find_element_by_id('returnHomeButton').click() #continue to create page
+
+        # test continue and return buttons
+        self.selenium.find_element_by_id('continueButton').click()  # continue to create page
+        time.sleep(2)  # wait 2 secs
+        self.selenium.find_element_by_id('returnHomeButton').click()  # continue to create page
         time.sleep(2)
-        
-        #test using the new login
+
+        # test using the new login
         self.selenium.switch_to.alert.accept()
         time.sleep(1)
-        self.selenium.find_element_by_id('logoutButton').click() #logout from home page
-        id_input = self.selenium.find_element_by_id('id_username') #set id_input var
-        pass_input = self.selenium.find_element_by_id('id_password') #set pass_input var
+        self.selenium.find_element_by_id('logoutButton').click()  # logout from home page
+        id_input = self.selenium.find_element_by_id('id_username')  # set id_input var
+        pass_input = self.selenium.find_element_by_id('id_password')  # set pass_input var
         id_input.clear()
         pass_input.clear()
         id_input.send_keys('johnDoe1')
         pass_input.send_keys('flowerCats')
         time.sleep(2)  # Wait 2 secs
-        self.selenium.find_element_by_id('loginButton').click() #click sign up
+        self.selenium.find_element_by_id('loginButton').click()  # click sign up
         time.sleep(2)
 
         # Sets the title and synopsis values to a default allowing for visual on
@@ -112,7 +142,8 @@ class MySeleniumTests(StaticLiveServerTestCase):
         time.sleep(1)
         self.selenium.find_element_by_id('clue2_text').send_keys('This is clue 2')
         time.sleep(1)
-        self.selenium.find_element_by_id('clue2_img_url').send_keys('https://media.tenor.com/images/1ef18fe44fec6a28182fe0b60d2e9e94/tenor.gif')
+        self.selenium.find_element_by_id('clue2_img_url').send_keys(
+            'https://media.tenor.com/images/1ef18fe44fec6a28182fe0b60d2e9e94/tenor.gif')
         time.sleep(1)
 
         # Refreshes the content on the webpage so the image will be presented
@@ -146,8 +177,3 @@ class MySeleniumTests(StaticLiveServerTestCase):
         # Focus on the alert and accept
         self.selenium.switch_to.alert.accept()
         time.sleep(1)
-
-
-
-
-
