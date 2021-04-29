@@ -30,6 +30,7 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('signout/',views.signout,name='signout'),
     path('new_story/', views.new_story, name="new_story"),
+    path('save_story/', views.save_story, name="save_story"),
     path('load_story/', views.load_story, name="load_story"),
     path('storycreator/', views.storyboard, name="storyboard"),
     path('addclue/', views.add_clue, name="add_clue"),
