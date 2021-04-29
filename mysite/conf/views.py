@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from .forms import LoadForm
 from .models import Clue as DBClue
 from .models import Story as DBStory
 import json
@@ -113,6 +114,13 @@ def new_story(request):
 
 
 def load_story(request):
+    username = request.user.username
+    s=DBStory.objects.filter(user=username)
+    Choices=[]
+    
+    for stor in s:
+         Choices.append(stor.title)
+    
     return HttpResponseRedirect(reverse('storyboard'))
 
 
@@ -153,8 +161,7 @@ def save_story(request):
         s.save()
 
     return HttpResponseRedirect(reverse('refresh_story'))
-
-
+    
 def storyboard(request):
     return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
                                                        'clues': temp_story.Clues})
