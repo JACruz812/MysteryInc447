@@ -60,24 +60,29 @@
     </div>
 
     <!-- hopefully will loop through all of the clues and display their relevant information-->
-    <div class="Clue_Box">
+    <div class="Clue_Container">
 
         {% for clue in clues %}
 
-            <!-- display clue id number-->
-            <p><b>Clue {{clue.clue_id}}</b></p>
+            <p style='padding:6px; color: black; background-color: white; border: black 2px solid; width: 600 px; border-radius: 20px; float: left;'>
 
-            <!-- display clue text -->
-            <p><b>{{clue.clue_text}}</b></p>
+                <!-- display clue id number-->
+                <b>Clue ID: {{clue.clue_id}}</b>
 
-            <!-- display clue image -->
-            <p><b>{{clue.clue_img_url}}</b></p>
-            <!-- <img class="clue_img" src="{{clue.clue_img_url}}" height="170px"> -->
+                </br>
 
-            <!-- display number of parents -->
-            <p><b>Number of Parent Clues: {{clue.num_parents}}</b></p>
+                <!-- display clue text -->
+                <b>Clue Content: {{clue.clue_text}}</b>
 
-            </br>
+                <!-- display clue image -->
+                <b>{{clue.clue_img_url}}</b>
+                <!-- <img class="clue_img" src="{{clue.clue_img_url}}" height="170px"> -->
+                </br>
+
+                <!-- display number of parents -->
+                <b>Number of Parent Clues: {{clue.num_parents}}</b>
+
+            </p>
 
         {% endfor %}
 

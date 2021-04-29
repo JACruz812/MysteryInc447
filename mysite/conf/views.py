@@ -234,11 +234,13 @@ def refresh_story(request):
 def return_to_editor(request):
 
     # missing context
-   return render(request, 'Storyboard.html', context={})
+   return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+                                                       'clues': temp_story.Clues})
 
 # allows user to access visual clues page
 def display_clues(request):
-    return render(request, 'display_clues.html', context={})
+    return render(request, 'display_clues.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+                                                       'clues': temp_story.Clues})
 
 # actually display the clues as they are on the page
 # umm this should be fun
