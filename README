@@ -17,3 +17,8 @@ Steps to run tests:
 3) run the tests.sh bash script with the following command => ./tests.sh
 4) If you don't have a bash terminal you can run the command in powershell from MysteryInc dir => ./mysite/manage.py test tests.MySeleniumTests.test_site
 
+
+The site is now deployable on Heroku using the following instructions:
+1) Create a Heroku account
+2) Deploy the cite on Heroku by linking git repo containing MysteryInc project
+3) Access site via the given url from Heroku
