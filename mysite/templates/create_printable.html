@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Printable</title>
+<!--    Below is a list of element classes to edit attributes    -->
     <style>
+
         div.Story_Title {
             text-align: center;
         }
@@ -14,14 +16,22 @@
             text-align: center;
         }
         label.synopsis {
-            font-size: 20px;
+            font-size: 30px;
         }
-        textarea.clue_list {
-            resize: none;
+        label.clue_list {
+            font-size: 20px;
+            text-align: center;
+        }
+        p.clue_name {
+            font-size: 25px;
         }
     </style>
 </head>
 <body>
+
+
+
+<!--First the story title and synopsis are printed out-->
 <form id="story" name="story" method="post" onsubmit="return false;">
     <div class="Story_Title">
         <label class="Story_Title">
@@ -34,23 +44,34 @@
         </label>
     </div>
 
+
+
+<!--Then the list of clues are outputted in numerical order using a for loop-->
     <div class="Clue_Container">
 
         {% for clue in clues %}
 
-        <p><b>Clue {{clue.clue_num}}</b></p>
+        <hr>
+        <p class="clue_name"><b>Clue {{clue.clue_num}}</b></p>
 
-        <textarea class = "clue_list"
+        <label class = "clue_list"
             id = "clue{{clue.clue_num}}_text"
             name = "clue{{clue.clue_num}}_text"
             rows = "11"
             cols = "100"
-            maxlength = "1000">{{clue.clue_text}}</textarea>
+            maxlength = "1000">{{clue.clue_text}}</label>
 
-        <img class="clue_img" src="{{clue.clue_img_url}}" height="170px">
+        <img class="clue_img" src="{{clue.clue_img_url}}" height="170px" align="right">
 
-        </br>
 
+
+<!--        This script makes a 10 line break to give space for the next clue       -->
+        <script>
+            var i;
+            for (i = 0; i < 10; i++) {
+                document.write("<br>");
+            }
+        </script>
 
         {% endfor %}
 
