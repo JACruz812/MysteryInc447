@@ -153,6 +153,69 @@ class MySeleniumTests(StaticLiveServerTestCase):
         time.sleep(1)
 
 
+    # tests that the button on the display clue page that allows for the user
+    # to return to the storyboard editor still works
+    def test_return_to_storyboard_button(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/display_clues/'))
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('returnToEditor').click()
+        time.sleep(1)
+
+        assertEquals(driver.getCurrentUrl(), (self.live_server_url, '/return_to_editor/'))
+
+
+
+    # checks if the display clue page contatins the correct information
+    # without first refreshing the storyboard page to save clue information
+    def test_display_clue_page_no_refresh(self):
+        self.selenium.get('%s%s' % (self.live_server_url, '/return_to_editor/'))
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue1_text').send_keys('This is clue 1')
+        time.sleep(1)
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('displayclues').click()
+        time.sleep(1)
+
+        assertEquals(driver.getCurrentUrl(), (self.live_server_url, '/display_clues/'))
+
+
+    # checks that the visual display clues page looks correct after a storyboard refresh and 
+    # retains all of the clue information, escpeially the clue text
+    def test_display_clues_with_refresh(self):
+
+        # go back to storyboard editor
+        self.selenium.get('%s%s' % (self.live_server_url, '/return_to_editor/'))
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+        self.selenium.find_element_by_id('clue1_text').send_keys('This is clue 1')
+        time.sleep(1)
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('add').click()
+        time.sleep(1)
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('refresh').click()
+        time.sleep(1)
+
+        # Adds a new clue that only contains text leaving the image blank
+        self.selenium.find_element_by_id('displayclues').click()
+        time.sleep(1)
+
+        assertEquals(driver.getCurrentUrl(), (self.live_server_url, '/display_clues/'))
+
+
 
         
 
