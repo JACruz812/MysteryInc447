@@ -88,7 +88,7 @@ def add_clue(request):
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
         # while increasing the clue counter in the story
-        global temp_story
+        #global temp_story
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
         temp_story.clue_amount += 1
@@ -114,7 +114,7 @@ def remove_clue(request):
 
     if request.method == 'POST':
 
-        global temp_story
+        #global temp_story
         # Accesses the temp_story and set the title and synopsis variables
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
@@ -177,7 +177,7 @@ def connect_clue(request):
         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
 
         # Accesses the temp story that contains all of the clues that need to be connected
-        global temp_story
+        #global temp_story
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
         ######################################################################
@@ -216,7 +216,7 @@ def refresh_story(request):
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
         # while increasing the clue counter in the story
-        global temp_story
+      # global temp_story
 
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
@@ -232,10 +232,22 @@ def refresh_story(request):
 
 # allows user to go back to the Storyboard editor from the visually displayed clues page
 def return_to_editor(request):
+
+    # missing context
    return render(request, 'Storyboard.html', context={})
 
 # allows user to access visual clues page
 def display_clues(request):
     return render(request, 'display_clues.html', context={})
+
+# actually display the clues as they are on the page
+# umm this should be fun
+def display_clues_on_page(request):
+
+    for x in temp_story.Clues:
+        x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+        x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+
+    return HttpResponseRedirect(reverse('display_clues'))
 
 

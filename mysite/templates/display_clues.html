@@ -13,6 +13,20 @@
     </style>
     <script>
         // where the functions go
+               
+        // This function should redirect to the page that displaays clues. 
+        function return_to_editor() {
+
+            //redirects to display story page
+            location.replace("{%url 'return_to_editor'%}");
+        }
+
+        function display_clues_on_page() {
+
+            document.story.action="{% url 'display_clues_on_page' %}";
+
+        }
+
     </script>
     <meta charset="UTF-8">
     <title>Visual Display</title>
@@ -38,16 +52,36 @@
     <div class="container" style="text-align: center;">
         The existing clues can be seen connected below. To edit, add, or remove clues, please return to the Storyboard Editor. <br/>
     </div>
+    
+    <!-- for now, only holds the button to return to the editor. Can hold more later-->
+    <div class="Button_Bar">
+        <button id="returnToEditor" onclick="return_to_editor();" type="button">Return to Storyboard Editor</button>
+        <!--<button id="displayOnPage" onclick="display_clues_on_page();" type="button">Display Clues</button>-->
+    </div>
 
+    <!-- hopefully will loop through all of the clues and display their relevant information-->
+    <div class="Clue_Box">
 
-    <!-- button to return to storyboard editor-->
-    <form action="{%url 'return_to_editor'%}" method="post">
-        {% csrf_token %}
-        <input type='submit' value='Return to Storyboard Editor'>
-    </form>
+        {% for clue in clues %}
 
-    <!-- now I have to figure out how to display things-->
-    <!-- this might need help from the database -->
+            <!-- display clue id number-->
+            <p><b>Clue {{clue.clue_id}}</b></p>
+
+            <!-- display clue text -->
+            <p><b>{{clue.clue_text}}</b></p>
+
+            <!-- display clue image -->
+            <p><b>{{clue.clue_img_url}}</b></p>
+            <!-- <img class="clue_img" src="{{clue.clue_img_url}}" height="170px"> -->
+
+            <!-- display number of parents -->
+            <p><b>Number of Parent Clues: {{clue.num_parents}}</b></p>
+
+            </br>
+
+        {% endfor %}
+
+    </div>
 
 </body>
 </html>
