@@ -170,6 +170,16 @@
         }
         ////////////////////////////////////////////////////////////////////////////////
 
+        ////////////////////////////////////////////////////////////////////////////////
+
+        // This function should redirect to the page that displaays clues. 
+        function display_clues() {
+
+            //redirects to display story page
+            location.replace("{%url 'display_clues'%}");
+        }
+
+
     </script>
 
     <!------------------------------------------------------------------------>
@@ -228,7 +238,7 @@
             <button id="add" onclick="add_clue();" type="button">Add Clue</button>
             <button id="remove" onclick="remove_clue();" type="button">Remove Clue</button>
             <button id="refresh" onclick="refresh_story();" type="button">Refresh Story</button>
-            <button id="display_clues" onclick="display_clues();" type="button">Display Clues</button>
+            <button id="displayclues" onclick="display_clues();" type="button">Display Clues</button>
 
         </div>
         <!------------------------------------------------------------------------------->

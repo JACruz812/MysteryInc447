@@ -12,19 +12,22 @@ import json
 # but as of right now they work since no information is being saved
 # to the database in regards to the story
 class Clue:
-    clue_id = 0
-    clue_num = 0
+    clue_num = 0 # actual clue number seen by user
     clue_text = ''
     clue_img_url = ''
-    clue_parents = []
+    parent_clues = [] # list of the actual clues
+    parent_clue_ids = [] # list of parent id numbers
+    num_parents = 0
+    clue_id = 0 # clue id, never changes after initial creation (not updated ever for easy identification)
 
 
 class Story:
     title = ''
     synopsis = ''
     clue_amount = 0
-    clue_id_tracker = 0
+    clue_id_tracker = 0 # will keep track of overall number of clues that have existed, regardless of how many remain
     Clues = []
+    removed_ids = []
 
 
 # Turns the input into an array allowing for ease of access and manipulation
@@ -109,6 +112,7 @@ def new_story(request):
     temp_story.title = ''
     temp_story.synopsis = ''
     temp_story.clue_amount = 0
+    temp_story.clue_id_tracker = 0
     ######################################################################
 
     return HttpResponseRedirect(reverse('storyboard'))
@@ -195,7 +199,7 @@ def add_clue(request):
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
         # while increasing the clue counter in the story
-        global temp_story
+        #global temp_story
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
         temp_story.clue_amount += 1
@@ -222,12 +226,13 @@ def add_clue(request):
 def remove_clue(request):
     if request.method == 'POST':
 
-        global temp_story
+        #global temp_story
         # Accesses the temp_story and set the title and synopsis variables
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
 
         marked = []
+        marked_id = []
 
         # Loop through the Clues in the story setting all available data
         for x in temp_story.Clues:
@@ -236,14 +241,29 @@ def remove_clue(request):
             # x.clue_parents = request.POST['clue' + str(x.clue_num) + 'clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
+            # also add clue id
             if request.POST['clue' + str(x.clue_num) + '_remove'] == "Remove":
                 marked.append(int(x.clue_num) - 1)
+                temp_story.removed_ids.append(x.clue_id)
 
-        # Loop through the marked list and remove the corresponding clue from Clue list in
-        # temp_story
-        for x in reversed(marked):
+        # Loop through the marked list and remove the corresponding clue from Clue list in temp_story
+        for x in marked:
             temp_clue = temp_story.Clues[x]
+
+            # remove the clue from the list
             temp_story.Clues.remove(temp_clue)
+
+            # determine which clues have the clue being removed as a parent and delete them
+            for curr_clue in temp_story.Clues:
+
+                # if clue being removed is a parent, remove it from list of parents
+                if temp_clue.clue_id in curr_clue.parent_clue_ids:
+
+                    curr_clue.parent_clues.remove(temp_clue) # remove from list of clues, may need to be updated
+                    curr_clue.parent_clue_ids.remove(temp_clue.clue_id)
+                    curr_clue.num_parents -= 1
+
+            # finally actually delete the clues
             del temp_clue
 
             # Once the clue is removed lower the clue nums of all clues that came after
@@ -266,7 +286,7 @@ def refresh_story(request):
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
         # while increasing the clue counter in the story
-        global temp_story
+      # global temp_story
 
         temp_story.title = request.POST['title']
         temp_story.synopsis = request.POST['synopsis']
@@ -284,9 +304,24 @@ def refresh_story(request):
 
 # allows user to go back to the Storyboard editor from the visually displayed clues page
 def return_to_editor(request):
-    return render(request, 'Storyboard.html', context={})
 
+    # missing context
+   return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+                                                       'clues': temp_story.Clues})
 
 # allows user to access visual clues page
 def display_clues(request):
-    return render(request, 'display_clues.html', context={})
+    return render(request, 'display_clues.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+                                                       'clues': temp_story.Clues})
+
+# actually display the clues as they are on the page
+# umm this should be fun
+def display_clues_on_page(request):
+
+    for x in temp_story.Clues:
+        x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+        x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+
+    return HttpResponseRedirect(reverse('display_clues'))
+
+
