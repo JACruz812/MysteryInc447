@@ -1,9 +1,12 @@
-
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from .models import Clue as DBClue
+from .models import Story as DBStory
+import json
+
 
 # These objects will need to be transformed into models later on
 # but as of right now they work since no information is being saved
@@ -27,14 +30,50 @@ class Story:
     removed_ids = []
 
 
+# Turns the input into an array allowing for ease of access and manipulation
+# of clues within the temp_story
+def load_parent_list(parent_list):
+    jsonDec = json.decoder.JSONDecoder()
+    temp_list = jsonDec.decode(parent_list)
+    return jsonDec.decode(temp_list)
+
+
+# Turns the input array into a string allowing for easy saves into the database
+def save_parent_list(parent_list):
+    return json.dumps(parent_list)
+
+
+# Takes in the string version of the list created by the user and converts it into
+# a list that is to be saved in the temp clue object
+def create_list(my_string, in_exist):
+    finished_list = []
+    if my_string != '':
+        my_list = my_string.split(',')
+        length = len(my_list)
+        for i in range(length):
+            try:
+                temp_int = int(my_list[i])
+                if temp_int > 0:
+                    if temp_int in in_exist:
+                        if temp_int not in finished_list:
+                            finished_list.append(temp_int)
+
+            except:
+                pass
+
+    return finished_list
+
+
 global temp_story
 temp_story = Story()
+
+
 ######################################################################
 
-#This view function is used when signup is called
+# This view function is used when signup is called
 def signup(request):
-   #  If the method is requesting to input data than create form, check if valid and save its elements
-   if request.method == 'POST':
+    #  If the method is requesting to input data than create form, check if valid and save its elements
+    if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -42,24 +81,27 @@ def signup(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            #return to home page if account
+            # return to home page if account
             return redirect('home')
-   else:
-       #else create an empty form
+    else:
+        # else create an empty form
         form = UserCreationForm()
-    #return the form to signup.html to handle if error
-   return render(request, 'signup.html', {'form': form})
+    # return the form to signup.html to handle if error
+    return render(request, 'signup.html', {'form': form})
 
-#This view function is used when signout is called
+
+# This view function is used when signout is called
 def signout(request):
     logout(request)
-    #redirect to the login page after the user is logged out
+    # redirect to the login page after the user is logged out
     return redirect('login')
+
+
 def index(request):
     return render(request, 'index.html', context={})
-   
+
+
 def new_story(request):
-   
     global temp_story
 
     # Clears the contents of the clue list in the story to clear memory
@@ -72,18 +114,87 @@ def new_story(request):
     temp_story.clue_amount = 0
     temp_story.clue_id_tracker = 0
     ######################################################################
-   
+
     return HttpResponseRedirect(reverse('storyboard'))
-   
+
+
 def load_story(request):
     return HttpResponseRedirect(reverse('storyboard'))
 
+
+def save_story(request):
+    if request.method == 'POST':
+
+        # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
+        # while increasing the clue counter in the story
+        global temp_story
+
+        temp_story.title = request.POST['title']
+        temp_story.synopsis = request.POST['synopsis']
+        ######################################################################
+
+        # Reads in the contents of existing clues in the storyboard and stores the content to the stories clues list
+        for x in temp_story.Clues:
+            x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+            x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+        ######################################################################
+
+        # create a story object with the title,synopsis, and clue amounts from the temp_story
+        username = request.user.username
+
+        # Checks to see if the story already exists within the database and if it does use that story else create a new
+        # story
+        if DBStory.objects.filter(title=temp_story.title, user=username).exists():
+            s = DBStory.objects.get(title=temp_story.title, user=username)
+            s.synopsis = temp_story.synopsis
+            s.num_clues = temp_story.clue_amount
+            s.save(update_fields=['synopsis', 'num_clues'])
+
+            entry = 0
+            DBList = s.clue_set.all()
+
+            length = len(DBList)
+            # loads all the clue information into the database while connecting it with the given story object
+            for clue in temp_story.Clues:
+                # updates all clues that already exist within the database then create more clues when needed
+                if entry < len(DBList):
+                    DBList[entry].clue_num = clue.clue_num
+                    DBList[entry].clue_text = clue.clue_text
+                    DBList[entry].clue_img_url = clue.clue_img_url
+                    DBList[entry].parent_list = save_parent_list(clue.clue_parents)
+                    DBList[entry].save(update_fields=['clue_num', 'clue_text', 'clue_img_url', 'parent_list'])
+                    entry += 1
+                else:
+                    s.clue_set.create(clue_id=clue.clue_id, clue_num=clue.clue_num, clue_text=clue.clue_text,
+                                      clue_img_url=clue.clue_img_url, parent_list=save_parent_list(clue.clue_parents))
+                ######################################################################
+            # Deletes clues from the database when the list of current clues is smaller then the list within the
+            # database
+            if entry < length:
+                for x in reversed(DBList):
+                    x.delete()
+                    length -= 1
+                    if entry == length:
+                        break
+            ######################################################################
+        else:
+            s = DBStory(title=temp_story.title, synopsis=temp_story.synopsis, num_clues=temp_story.clue_amount,
+                        user=username)
+            s.save()
+            for clue in temp_story.Clues:
+                s.clue_set.create(clue_id=clue.clue_id, clue_num=clue.clue_num, clue_text=clue.clue_text,
+                                  clue_img_url=clue.clue_img_url, parent_list=save_parent_list(clue.clue_parents))
+        ######################################################################
+    return HttpResponseRedirect(reverse('refresh_story'))
+
+
 def storyboard(request):
-        return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+    return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
                                                        'clues': temp_story.Clues})
 
-def add_clue(request):
 
+def add_clue(request):
     if request.method == 'POST':
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
@@ -102,6 +213,7 @@ def add_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
         # Adds an empty clue to the end of the stories clue list
@@ -110,8 +222,8 @@ def add_clue(request):
 
     return HttpResponseRedirect(reverse('storyboard'))
 
-def remove_clue(request):
 
+def remove_clue(request):
     if request.method == 'POST':
 
         #global temp_story
@@ -126,6 +238,7 @@ def remove_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+            # x.clue_parents = request.POST['clue' + str(x.clue_num) + 'clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
             # also add clue id
@@ -168,50 +281,7 @@ def remove_clue(request):
     return HttpResponseRedirect(reverse('storyboard'))
 
 
-# allows user to connect two clues together
-def connect_clue(request):
-
-    if request.method == 'POST':
-
-        # im assuming this is how I get the parent and child
-        x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
-
-        # Accesses the temp story that contains all of the clues that need to be connected
-        #global temp_story
-        temp_story.title = request.POST['title']
-        temp_story.synopsis = request.POST['synopsis']
-        ######################################################################
-
-        # check through all clues, find numbers that need to be connected
-        for x in temp_story.Clues:
-
-            # empty out list of parent clues
-            x.parent_clues = []
-            x.parent_clue_ids = []
-            x.num_parents = 0
-
-            # add back in any clues if needed
-            # may need to replace this with function Connor made
-            if request.POST['clue' + str(x.clue_num) + '_parent'] != NULL:
-
-                # connect each parent clue
-                # NOT parent_nums, should be size of the array on the webpage
-                for i in size(parent_nums):
-                    
-                    # get parent clue, will need to do verification that this is the correct clue later on when I figure out how we are getting the information
-                    # verify using id numbers
-                    parent_clue = temp_story.Clues[parent_nums[i - 1]]
-
-                    # add parent clue to child clue's list
-                    x.parent_clues.append(parent_clue)
-                    x.parent_clue_ids.append(parent_clue.clue_id)
-                    x.num_parents += 1
-
-    return HttpResponseRedirect(reverse('storyboard'))
-
-
 def refresh_story(request):
-
     if request.method == 'POST':
 
         # Accesses the temp story add inserts a blank clue to the end of the clue list that is not connected to any clue
@@ -226,9 +296,11 @@ def refresh_story(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
     return HttpResponseRedirect(reverse('storyboard'))
+
 
 # allows user to go back to the Storyboard editor from the visually displayed clues page
 def return_to_editor(request):
