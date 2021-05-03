@@ -1,69 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <title>Storyboard</title>
+</head>
+<body class="d-flex h-100 text-white bg-dark">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 
     <!--This is temporary since the links are no longer working will try and
         fix this later-->
 
-    <style>
+        <style>
 
-        div.Story_Title {
-            text-align: center;
-        }
-        label.Story_Title {
-            font-size: 30px;
-        }
-        input.Story_Title {
-            font-size: 30px;
-        }
-        p.Story_Title {
-            font-size: 20px
-        }
+            div.Story_Title {
+                text-align: center;
+            }
+            label.Story_Title {
+                font-size: 30px;
+            }
+            input.Story_Title {
+                font-size: 30px;
+            }
+            p.Story_Title {
+                font-size: 20px
+            }
 
-        div.Button_Bar {
-            border-style: double;
-        }
+            div.Button_Bar {
+                border-style: double;
+            }
 
-        div.description {
-            text-align: center;
-        }
-        p.description {
-            font-size: 12px;
-        }
-        textarea.synopsis {
-            resize: none;
-        }
+            div.description {
+                text-align: center;
+            }
+            p.description {
+                font-size: 12px;
+            }
+            textarea.synopsis {
+                resize: none;
+            }
 
-        textarea.clue_list {
-            resize: none;
-        }
+            textarea.clue_list {
+                resize: none;
+            }
 
-        .clue_img {
-            transition: transform .2s;
-        }
+            .clue_img {
+                transition: transform .2s;
+            }
 
-        .clue_img:hover {
-            transform: scale(2);
-        }
+            .clue_img:hover {
+                transform: scale(2);
+            }
 
-        div.Story_Title {
-            background-color: white;
-            top: 0px;
-            width: 100%;
-            position: fixed;
-        }
-        div.Button_Bar {
-            background-color: white;
-            top: 95px;
-            width: 100%;
-            position: fixed;
-        }
-        div.main {
-            margin-top:130px;
-        }
-
-
-    </style>
+            div.Story_Title {
+                top: 0px;
+                width: 100%;
+                position: fixed;
+            }
+            div.Button_Bar {
+                top: 95px;
+                width: fit-content;
+                position: fixed;
+            }
+            div.main {
+                margin-top:130px;
+            }
+            div.bg-modal {
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                position: fixed;
+                top:0;
+                display: flex;
+                justify-content:center;
+                align-items: center;
+                display: none;
+            }
+            div.modal-content {
+                width: 700px;
+                height: 500px;
+                background-color: black;
+                border-radius: 4px;
+            }
+            .close{
+                position: absolute;
+                top: 0px;
+                right: 10px;
+                font-size: 40px;
+                transform: rotate(45deg);
+                cursor: pointer;
+                color: black;
+            }
+            div.scroll {
+               overflow: auto;
+               border: 1px black;
+               background-color: darkgrey;
+               width: 700px;
+               height:500px;
+            }
+        </style>
 
     <script>
 
@@ -178,7 +213,21 @@
             //redirects to display story page
             location.replace("{%url 'display_clues'%}");
         }
+        ////////////////////////////////////////////////////////////////////////////////
 
+        //clicking on the help button should make the hidden popup box appear and
+        //disappear on click (untested and can't check because i can't run the server still)
+        function need_help() {
+             document.getElementById('help').addEventListener('click', function () {
+                document.querySelector('.bg-modal').style.display = 'flex';
+            });
+
+            document.querySelector('.close').addEventListener('click', function(){
+                document.querySelector('.bg-modal').style.display = 'none';
+            });
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////
 
     </script>
 
@@ -196,12 +245,14 @@
 </head>
 <body>
 
-  <form method="post" style="text-align: right;">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <!-- Logout Button, redirects to the login page after logging out the user-->
-        <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
-    </form>
+    <header class="mb-5">
+        <div>
+            <nav class="nav nav-masthead justify-content-center float-md-end">
+                <!-- Logout Button, redirects to the login page after logging out the user-->
+                <a class="nav-link" href="{% url 'signout'%}" id='logoutButton'>Log Out</a>
+            </nav>
+        </div>
+    </header>
   
     <form id="story" name="story" method="post" onsubmit="return false;">
 
@@ -231,15 +282,15 @@
             (unimplemented), and adding a new clue to the story board(unimplemented)-->
         <div class="Button_Bar">
 
-            <button id="returnHomeButton" onclick="return_to_home();" type="button">Return Home</button>
-            <button id="new_story" onclick="start_new_story();" type="button">New Story</button>
-            <button id="save" onclick="save_story();" type="button">Save Story</button>
-            <button id="load" onclick="load_story();" type="button">Load Story</button>
-            <button id="add" onclick="add_clue();" type="button">Add Clue</button>
-            <button id="remove" onclick="remove_clue();" type="button">Remove Clue</button>
-            <button id="refresh" onclick="refresh_story();" type="button">Refresh Story</button>
-            <button id="displayclues" onclick="display_clues();" type="button">Display Clues</button>
-
+                    <button id="returnHomeButton" onclick="return_to_home();" type="button" title="Return back to the home page">Return Home</button>
+                    <button id="new_story" onclick="start_new_story();" type="button" title="Start a new story">New Story</button>
+                    <button id="save" onclick="save_story();" type="button" title="Save your current story">Save Story</button>
+                    <button id="load" onclick="load_story();" type="button" title="Load in a previous story">Load Story</button>
+                    <button id="add" onclick="add_clue();" type="button" title="Add a clue to this story">Add Clue</button>
+                    <button id="remove" onclick="remove_clue();" type="button" title="Remove a clue from this story">Remove Clue</button>
+                    <button id="refresh" onclick="refresh_story();" type="button" title="Refresh your story">Refresh Story</button>
+                    <button id="display_clues" onclick="display_clues();" type="button" title="Display the clues to your story">Display Clues</button>
+                    <button id="help" onclick="need_help();" type="button" title="Need help? Click here!">Help</button>
         </div>
         <!------------------------------------------------------------------------------->
         
@@ -259,6 +310,59 @@
                     500 character limit for synopsis</br>
                     1000 character limit for clues
                 </p>
+
+            </div>
+            <!--Modal Section (For PopUp box) -->
+            <div class="bg-modal">
+                <div class="modal-content">
+                    <div class="scroll">
+                        <p>Welcome to the Mystery Inc. Story Creator!</p>
+
+                        <p>This is here to help teach you the ropes on how to get around
+                            the site and set up your first story!</p>
+
+                        <p>Everything you'll need is on the row of buttons above. Each one
+                            is pretty self explanatory, but we'll run through all of them
+                            as well as everything else on this page for the utmost clarity.</p>
+
+                        <p>Title:           This is where you put in the name of your interactive
+                            mystery story!</p>
+
+                        <p>Author:          This is you! Make sure that this matches the account
+                            name you used to sign in.</p>
+
+                        <p>Return Home:     If you want to leave the Story Creator page. Don't
+                            forget to save beforehand!</p>
+
+                        <p>New Story:       If you would like to start a brand new story. Make
+                            sure to save your current project beforehand.</p>
+
+                        <p>Save Story:      Saves your current story as a txt file in your
+                            computer (tentative and subject to change)</p>
+
+                        <p>Load Story:      Saves your current story as a txt file in your
+                            computer (tentative and subject to change)</p>
+
+                        <p>Add Clue:        This allows you to add a clue to your story. Clues
+                            can be connected to one another that guide the player
+                            through your story in an attempt to solve the case!</p>
+
+                        <p>Remove Clue:     If you have a clue that you no longer want or need,
+                            then you can remove it with this button. This action
+                            is irreversible, so make sure you're absolutely sure.</p>
+
+                        <p>Refresh:         Assuming this just refreshes the page to show was is
+                            what's currently still there and what not? (confirm
+                            this)</p>
+
+                        <p>Display Clues:   This takes you to a page filled with all of the connections
+                            you've made between your clues (add more once I actually
+                            see the page)</p>
+
+                        <p>Help:        Uh, that's how you got here lol</p>
+                    </div>
+                    <div class="close">+</div>
+                </div>
 
             </div>
 
@@ -306,5 +410,6 @@
 
         </div>
     </form>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 </body>
 </html>
