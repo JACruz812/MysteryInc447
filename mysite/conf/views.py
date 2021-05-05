@@ -159,6 +159,8 @@ def save_story(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+
         ######################################################################
 
         # create a story object with the title,synopsis, and clue amounts from the temp_story
@@ -204,7 +206,7 @@ def add_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            # x.parent_clues = request.POST['clue' + str(x.clue_num) + '_parent_clues']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
         # Adds an empty clue to the end of the stories clue list
@@ -228,7 +230,7 @@ def remove_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            # x.parent_clues = request.POST['clue' + str(x.clue_num) + 'parent_clues']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
             if request.POST['clue' + str(x.clue_num) + '_remove'] == "Remove":
@@ -271,7 +273,7 @@ def refresh_story(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            # x.parent_clues = request.POST['clue' + str(x.clue_num) + '_parent_clues']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
     return HttpResponseRedirect(reverse('storyboard'))
