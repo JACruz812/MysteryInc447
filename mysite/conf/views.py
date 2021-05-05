@@ -139,10 +139,6 @@ def load_story(request):
         #add the clues from s to temp_story
         for i in range(0,s.num_clues):
             temp_story.Clues.append(DBClue.objects.get(story=s,clue_num=i+1))
-        #Post the clue's texts and imgs to the Storyboard
-        for x in temp_story.Clues:
-            x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
-            x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
     return HttpResponseRedirect(reverse('storyboard'))
 
 
