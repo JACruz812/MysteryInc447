@@ -112,26 +112,31 @@ def new_story(request):
 
     return HttpResponseRedirect(reverse('storyboard'))
 
-
-def load_story(request):
+def loadworkaround(request):
+    # request.method="GET"
+    Choices=[]
     username = request.user.username
     s=DBStory.objects.filter(user=username)
-    Choices=[]
-    
     for stor in s:
-         Choices.append(stor.title)
-    form =LoadForm(request.POST,choices=Choices,s_title='')
-    s_title=form.s_title
-    s=DBStory.objects.get(title=s_title,user=username)
-    temp_story.title=s.title
-    temp_story.synopsis=s.synopsis
-    temp_story.clue_amount=s.num_clues
-    temp_story.Clues.clear()
-    for i in range(0,s.num_clues):
-        temp_story.Clues.append(DBClue.objects.get(story=s,clue_num=i+1))
-    for x in temp_story.Clues:
-        x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
-        x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+        Choices.append((stor.title,stor.title))
+    form =LoadForm(choices=Choices)
+    return render(request, 'story_select.html', {'form': form})
+def load_story(request):
+    # username = request.user.username
+    # print(request.method)
+    # if request.method =="POST":
+    #     form =LoadForm(request.POST)
+    #     s_title=''
+    #     s=DBStory.objects.get(title=s_title,user=username)
+    #     temp_story.title=s.title
+    #     temp_story.synopsis=s.synopsis
+    #     temp_story.clue_amount=s.num_clues
+    #     temp_story.Clues.clear()
+    #     for i in range(0,s.num_clues):
+    #         temp_story.Clues.append(DBClue.objects.get(story=s,clue_num=i+1))
+    #     for x in temp_story.Clues:
+    #         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+    #         x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
     return HttpResponseRedirect(reverse('storyboard'))
 
 
