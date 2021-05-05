@@ -317,9 +317,7 @@ def display_clues(request):
 # create a printable html that displays clue information in a printable format
 def create_printable(request):
     return render(request, 'create_printable.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
-                                                             'clues': temp_story.Clues, 'clue_count': temp_story.clue_amount})
-    return render(request, 'display_clues.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
-                                                       'clues': temp_story.Clues})
+                                                             'clues': temp_story.Clues})
 
 # actually display the clues as they are on the page
 # umm this should be fun
