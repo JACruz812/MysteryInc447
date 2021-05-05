@@ -39,4 +39,5 @@ urlpatterns = [
     path('display_clues/', views.display_clues, name="display_clues"),
     path('return_to_editor/', views.return_to_editor, name="return_to_editor"),
     path('create_printable/', views.create_printable, name="create_printable")
+    path('display_clues_on_page/', views.display_clues_on_page, name="display_clues_on_page")
 ]
