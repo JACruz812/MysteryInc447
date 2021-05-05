@@ -204,6 +204,13 @@
 
         }
         ////////////////////////////////////////////////////////////////////////////////
+        // This function will create a printable document from the current story values
+        function create_printable() {
+
+            location.replace("{%url 'create_printable'%}");
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -278,10 +285,9 @@
         <!------------------------------------------------------------------------------->
 
         <!--This section contains the action buttons allowing for the creation of a new
-            story(partially completed), saving a story(unimplemented), loading a story
-            (unimplemented), and adding a new clue to the story board(unimplemented)-->
+            story(partially completed), saving a story(implemented), loading a story
+            (implemented), and adding a new clue to the story board(implemented)-->
         <div class="Button_Bar">
-
                     <button id="returnHomeButton" onclick="return_to_home();" type="button" title="Return back to the home page">Return Home</button>
                     <button id="new_story" onclick="start_new_story();" type="button" title="Start a new story">New Story</button>
                     <button id="save" onclick="save_story();" type="button" title="Save your current story">Save Story</button>
@@ -290,6 +296,7 @@
                     <button id="remove" onclick="remove_clue();" type="button" title="Remove a clue from this story">Remove Clue</button>
                     <button id="refresh" onclick="refresh_story();" type="button" title="Refresh your story">Refresh Story</button>
                     <button id="displayclues" onclick="display_clues();" type="button" title="Display the clues to your story">Display Clues</button>
+                    <button id="print" onclick="create_printable();" type="button">Print</button>
                     <button id="help" onclick="need_help();" type="button" title="Need help? Click here!">Help</button>
         </div>
         <!------------------------------------------------------------------------------->
