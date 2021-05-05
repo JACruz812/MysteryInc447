@@ -113,30 +113,36 @@ def new_story(request):
     return HttpResponseRedirect(reverse('storyboard'))
 
 def loadworkaround(request):
-    # request.method="GET"
-    Choices=[]
+    Choices=[]#Will be a list of tupples
     username = request.user.username
-    s=DBStory.objects.filter(user=username)
+    s=DBStory.objects.filter(user=username)#find stories written by the user
+    #Append all of the user's stories to Choices as tupples because the ChoiceField attribute in forms expects it
     for stor in s:
         Choices.append((stor.title,stor.title))
+    #Create a form with choices that match the stories the user wrote
     form =LoadForm(choices=Choices)
+    #render the form on story_select.html
     return render(request, 'story_select.html', {'form': form})
 def load_story(request):
-    # username = request.user.username
-    # print(request.method)
-    # if request.method =="POST":
-    #     form =LoadForm(request.POST)
-    #     s_title=''
-    #     s=DBStory.objects.get(title=s_title,user=username)
-    #     temp_story.title=s.title
-    #     temp_story.synopsis=s.synopsis
-    #     temp_story.clue_amount=s.num_clues
-    #     temp_story.Clues.clear()
-    #     for i in range(0,s.num_clues):
-    #         temp_story.Clues.append(DBClue.objects.get(story=s,clue_num=i+1))
-    #     for x in temp_story.Clues:
-    #         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
-    #         x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
+    username = request.user.username
+    if request.method =="POST":
+        #Get the selected stories title from the form
+        s_title=request.POST['story_title']
+        #Load the story from the database
+        s=DBStory.objects.get(title=s_title,user=username)
+        #Fill in the values fot temp_story from s
+        temp_story.title=s.title
+        temp_story.synopsis=s.synopsis
+        temp_story.clue_amount=s.num_clues
+        #Clear the temp_story clues
+        temp_story.Clues.clear()
+        #add the clues from s to temp_story
+        for i in range(0,s.num_clues):
+            temp_story.Clues.append(DBClue.objects.get(story=s,clue_num=i+1))
+        #Post the clue's texts and imgs to the Storyboard
+        for x in temp_story.Clues:
+            x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
+            x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
     return HttpResponseRedirect(reverse('storyboard'))
 
 
