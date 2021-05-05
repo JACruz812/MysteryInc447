@@ -1,20 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+
+        div.Page_Title {
+            text-align: center;
+        }
+        label.Page_Title {
+            font-size: 30px;
+        }
+
+    </style>
+    <script>
+        // where the functions will go
+               
+        // This function should redirect to the page that displaays clues. 
+        function return_to_editor() {
+
+            //redirects to display story page
+            location.replace("{%url 'return_to_editor'%}");
+        }
+
+        function display_clues_on_page() {
+
+            document.story.action="{% url 'display_clues_on_page' %}";
+
+        }
+
+    </script>
     <meta charset="UTF-8">
     <title>Visual Display</title>
 </head>
 <body>
-    <body>
-        <div class="container" style="text-align: center;">
-            The existing clues can be seen connected below. To edit or add clues, please return to the Storyboard Editor. <br/>
-        </div>
-       <form action="{%url 'return_to_editor'%}" method="post">
-            {% csrf_token %}
-            <input type='submit' value='Return to Storyboard Editor'>
-        </form>
-        
-    </body>
+
+    <!-- allows user to logout from display clues page -->
+    <form method="post" style="text-align: right;">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <!-- Logout Button, redirects to the login page after logging out the user-->
+        <a href="{% url 'signout'%}"><button type="button" class="btn btn-default" id='logoutButton'>Log Out</button></a>
+    </form>
+
+
+    <!-- displays name at top of webpage-->
+    <div class="Page_Title">
+        <label class="Page_Title"><b>Visually Connected Clue Page</b></label>
+    </div>
+
+
+    <!-- displays instructions for user-->
+    <div class="container" style="text-align: center;">
+        The existing clues can be seen connected below. To edit, add, or remove clues, please return to the Storyboard Editor. <br/>
+    </div>
+    
+    <!-- for now, only holds the button to return to the editor. Can hold more later-->
+    <div class="Button_Bar">
+        <button id="returnToEditor" onclick="return_to_editor();" type="button">Return to Storyboard Editor</button>
+        <!--<button id="displayOnPage" onclick="display_clues_on_page();" type="button">Display Clues</button>-->
+    </div>
+
+    <!-- hopefully will loop through all of the clues and display their relevant information-->
+    <div class="Clue_Container">
+
+        {% for clue in clues %}
+
+            <p style='padding:6px; color: black; background-color: white; border: black 2px solid; width: 600 px; border-radius: 20px; float: left;'>
+
+                <!-- display clue id number-->
+                <b>Clue ID: {{clue.clue_id}}</b>
+
+                </br>
+
+                <!-- display clue text -->
+                <b>Clue Content: {{clue.clue_text}}</b>
+
+                <!-- display clue image -->
+                <b>{{clue.clue_img_url}}</b>
+                <!-- <img class="clue_img" src="{{clue.clue_img_url}}" height="170px"> -->
+                </br>
+
+                <!-- display number of parents -->
+                <b>Number of Parent Clues: {{clue.num_parents}}</b>
+
+            </p>
+
+        {% endfor %}
+
+    </div>
 
 </body>
 </html>
