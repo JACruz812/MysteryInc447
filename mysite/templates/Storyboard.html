@@ -210,6 +210,13 @@
 
         }
         ////////////////////////////////////////////////////////////////////////////////
+        // This function will create a printable document from the current story values
+        function create_printable() {
+
+            location.replace("{%url 'create_printable'%}");
+
+        }
+        ////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -284,9 +291,10 @@
         <!------------------------------------------------------------------------------->
 
         <!--This section contains the action buttons allowing for the creation of a new
-            story(partially completed), saving a story(unimplemented), loading a story
-            (unimplemented), and adding a new clue to the story board(unimplemented)-->
+            story(partially completed), saving a story(implemented), loading a story
+            (implemented), and adding a new clue to the story board(implemented)-->
         <div class="Button_Bar">
+
             <nav class="nav nav-masthead justify-content-center float-md-end">
                     <button id="returnHomeButton" onclick="return_to_home();" class="btn btn-md btn-secondary fw-bold border-white bg-blue" type="button" title="Return back to the home page">Return Home</button>
                     <button id="new_story" onclick="start_new_story();" class="btn btn-md btn-secondary fw-bold border-white bg-blue" type="button" title="Start a new story">New Story</button>
@@ -298,7 +306,6 @@
                     <button id="displayclues" onclick="display_clues();" class="btn btn-md btn-secondary fw-bold border-white bg-blue" type="button" title="Display the clues to your story">Display Clues</button>
                     <button id="help" onclick="need_help();" class="btn btn-md btn-secondary fw-bold border-white bg-blue" type="button" title="Need help? Click here!">Help</button>
             </nav>
-
         </div>
         <!------------------------------------------------------------------------------->
         

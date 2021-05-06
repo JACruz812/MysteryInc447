@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Printable</title>
+<!--    Below is a list of element classes to edit attributes    -->
+    <style>
+
+        div.Story_Title {
+            text-align: center;
+        }
+        label.Story_Title {
+            font-size: 75px;
+        }
+        div.synopsis {
+            text-align: center;
+        }
+        label.synopsis {
+            font-size: 25px;
+        }
+        label.clue_list {
+            font-size: 20px;
+            text-align: center;
+        }
+        p.clue_name {
+            font-size: 30px;
+        }
+        label.clue_list {
+            font-size: 20px;
+        }
+        b.child_title {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<!--First the story title and synopsis are printed out-->
+<form id="story" name="story" method="post" onsubmit="return false;">
+    <div class="Story_Title">
+        <label class="Story_Title">
+            {{title}}
+        </label>
+    </div>
+    <br/>
+    <div class="synopsis">
+        <label class="synopsis">
+            {{synopsis}}
+        </label>
+    </div>
+    <br/>
+
+
+
+<!--Then the list of clues are outputted in numerical order using a for loop-->
+    <div class="Clue_Container">
+
+        {% for clue in clues %}
+
+        <hr>
+        <p class="clue_name"><b>Clue {{clue.clue_num}}</b></p>
+
+        <label class = "clue_list"
+            id = "clue{{clue.clue_num}}_text"
+            name = "clue{{clue.clue_num}}_text"
+            rows = "11"
+            cols = "100"
+            maxlength = "1000">{{clue.clue_text}}</label>
+        <br/>
+        <br/>
+        <b class="child_title">Leads to: </b>
+        <label class="clue_list"
+            type="text"
+            id="clue{{clue.clue_num}}_clue_parents"
+            name="clue{{clue.clue_num}}_clue_parents">
+
+            {% for clue_x in clues %}
+                {% for parent in clue_x.clue_parents %}
+                    <script>
+                        if({{parent}} == {{clue.clue_num}}){
+                            document.write("Clue ",{{clue_x.clue_num}},",")
+                        }
+                    </script>
+                {% endfor %}
+            {% endfor %}
+
+        </label>
+
+        <img class="clue_img" src="{{clue.clue_img_url}}" height="170px" align="right">
+
+
+
+<!--        This script makes a 10 line break to give space for the next clue       -->
+        <script>
+            var i;
+            for (i = 0; i < 10; i++) {
+                document.write("<br>");
+            }
+        </script>
+
+        {% endfor %}
+
+    </div>
+
+</form>
+
+
+</body>
+</html>

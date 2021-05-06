@@ -213,7 +213,7 @@ def add_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
         # Adds an empty clue to the end of the stories clue list
@@ -238,7 +238,7 @@ def remove_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            # x.clue_parents = request.POST['clue' + str(x.clue_num) + 'clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
             # also add clue id
@@ -311,17 +311,19 @@ def return_to_editor(request):
 
 # allows user to access visual clues page
 def display_clues(request):
-    return render(request, 'display_clues.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
-                                                       'clues': temp_story.Clues})
+    return render(request, 'display_clues.html', context={})
+
+
+# create a printable html that displays clue information in a printable format
+def create_printable(request):
+    return render(request, 'create_printable.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
+                                                             'clues': temp_story.Clues})
 
 # actually display the clues as they are on the page
 # umm this should be fun
 def display_clues_on_page(request):
-
     for x in temp_story.Clues:
         x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
         x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
 
     return HttpResponseRedirect(reverse('display_clues'))
-
-
