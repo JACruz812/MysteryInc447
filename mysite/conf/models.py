@@ -18,7 +18,8 @@ class Clue(models.Model):
     clue_num = models.IntegerField()
     clue_text = models.CharField(max_length=1000, default='')
     clue_img_url = models.TextField(default='')
-    parent_list = models.TextField(default='[]')
+    parent_clues = models.TextField(default='[]')
+   
 
     class Meta:
         unique_together = (("story", "clue_id"),)

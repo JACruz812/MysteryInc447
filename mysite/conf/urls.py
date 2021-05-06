@@ -33,6 +33,7 @@ urlpatterns = [
     path('save_story/', views.save_story, name="save_story"),
     path('load_story/', views.load_story, name="load_story"),
     path('storycreator/', views.storyboard, name="storyboard"),
+    path('loadworkaround/', views.loadworkaround, name="loadworkaround"),
     path('addclue/', views.add_clue, name="add_clue"),
     path('removeclue/', views.remove_clue, name="remove_clue"),
     path('refresh/', views.refresh_story, name="refresh_story"),
