@@ -97,6 +97,13 @@
                width: 700px;
                height:500px;
             }
+            .aligned {
+                display: flex;
+                align-items: center;
+            }
+            span {
+                padding: 10px;
+            }
         </style>
 
     <script>
@@ -296,6 +303,7 @@
         <!------------------------------------------------------------------------------->
         
         <div class="main">
+
             <div class="description">
 
                 <h2 class="description">Synopsis</h2>
@@ -377,6 +385,7 @@
                 {% for clue in clues %}
 
                     <p><b>Clue {{clue.clue_id}}</b></p>
+                    <div class="aligned">
 
                     <textarea class = "clue_list"
                               id = "clue{{clue.clue_num}}_text"
@@ -384,10 +393,11 @@
                               rows = "11"
                               cols = "100"
                               maxlength = "1000">{{clue.clue_text}}</textarea>
-
+                    <span>
                     <img class="clue_img" src="{{clue.clue_img_url}}" height="170px">
+                    </span>
+                    </div>
 
-                    </br>
 
                     <p>URL: <input class="clue_list"
                                    type="text"
