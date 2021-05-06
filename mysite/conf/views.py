@@ -189,7 +189,6 @@ def save_story(request):
 
             entry = 0
             DBList = s.clue_set.all()
-            print("HELP!!!!",len(DBList))
 
             length = len(DBList)
             # loads all the clue information into the database while connecting it with the given story object
