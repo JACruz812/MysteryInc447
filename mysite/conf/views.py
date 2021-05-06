@@ -213,7 +213,7 @@ def add_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
         # Adds an empty clue to the end of the stories clue list
@@ -238,7 +238,7 @@ def remove_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + 'clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
             # also add clue id
