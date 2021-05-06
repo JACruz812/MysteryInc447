@@ -25,7 +25,7 @@
         p.clue_name {
             font-size: 30px;
         }
-        label.clue_list {
+        label.child_list {
             font-size: 20px;
         }
         b.child_title {
@@ -71,10 +71,10 @@
         <br/>
         <br/>
         <b class="child_title">Leads to: </b>
-        <label class="clue_list"
+        <label class="child_list"
             type="text"
-            id="clue{{clue.clue_num}}_clue_parents"
-            name="clue{{clue.clue_num}}_clue_parents">
+            id="clue{{clue.clue_num}}_clue_children"
+            name="clue{{clue.clue_num}}_clue_children">
 
             {% for clue_x in clues %}
                 {% for parent in clue_x.clue_parents %}
