@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from .forms import LoadForm
 from .models import Clue as DBClue
 from .models import Story as DBStory
 import json
@@ -35,7 +36,7 @@ class Story:
 def load_parent_list(parent_list):
     jsonDec = json.decoder.JSONDecoder()
     temp_list = jsonDec.decode(parent_list)
-    return jsonDec.decode(temp_list)
+    return temp_list
 
 
 # Turns the input array into a string allowing for easy saves into the database
@@ -117,8 +118,42 @@ def new_story(request):
 
     return HttpResponseRedirect(reverse('storyboard'))
 
-
+def loadworkaround(request):
+    Choices=[]#Will be a list of tupples
+    username = request.user.username
+    s=DBStory.objects.filter(user=username)#find stories written by the user
+    #Append all of the user's stories to Choices as tupples because the ChoiceField attribute in forms expects it
+    for stor in s:
+        Choices.append((stor.title,stor.title))
+    #Create a form with choices that match the stories the user wrote
+    form =LoadForm(choices=Choices)
+    #render the form on story_select.html
+    return render(request, 'story_select.html', {'form': form})
 def load_story(request):
+    username = request.user.username
+    if request.method =="POST":
+        #Get the selected stories title from the form
+        s_title=request.POST['story_title']
+        #Load the story from the database
+        s=DBStory.objects.get(title=s_title,user=username)
+        #Fill in the values fot temp_story from s
+        temp_story.title=s.title
+        temp_story.synopsis=s.synopsis
+        temp_story.clue_amount=s.num_clues
+        #Clear the temp_story clues
+        temp_story.Clues.clear()
+        #add the clues from s to temp_story
+        for i in range(0,s.num_clues):
+            c=DBClue.objects.get(story=s,clue_num=i+1)
+            clue=Clue()
+            clue.clue_num = c.clue_num
+            clue.clue_text = c.clue_text
+            clue.clue_img_url = c.clue_img_url
+            clue.parent_clues = load_parent_list(c.parent_clues)
+            clue.parent_clue_ids = map(str,load_parent_list(c.parent_clues))
+            clue.num_parents = len(clue.parent_clues)
+            clue.clue_id = c.clue_id 
+            temp_story.Clues.append(clue)
     return HttpResponseRedirect(reverse('storyboard'))
 
 
@@ -137,7 +172,8 @@ def save_story(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+
         ######################################################################
 
         # create a story object with the title,synopsis, and clue amounts from the temp_story
@@ -162,12 +198,12 @@ def save_story(request):
                     DBList[entry].clue_num = clue.clue_num
                     DBList[entry].clue_text = clue.clue_text
                     DBList[entry].clue_img_url = clue.clue_img_url
-                    DBList[entry].parent_list = save_parent_list(clue.clue_parents)
-                    DBList[entry].save(update_fields=['clue_num', 'clue_text', 'clue_img_url', 'parent_list'])
+                    DBList[entry].parent_clues = save_parent_list(clue.parent_clues)
+                    DBList[entry].save(update_fields=['clue_num', 'clue_text', 'clue_img_url', 'parent_clues'])
                     entry += 1
                 else:
                     s.clue_set.create(clue_id=clue.clue_id, clue_num=clue.clue_num, clue_text=clue.clue_text,
-                                      clue_img_url=clue.clue_img_url, parent_list=save_parent_list(clue.clue_parents))
+                                      clue_img_url=clue.clue_img_url, parent_clues=save_parent_list(clue.parent_clues))
                 ######################################################################
             # Deletes clues from the database when the list of current clues is smaller then the list within the
             # database
@@ -181,14 +217,16 @@ def save_story(request):
         else:
             s = DBStory(title=temp_story.title, synopsis=temp_story.synopsis, num_clues=temp_story.clue_amount,
                         user=username)
+
             s.save()
+
             for clue in temp_story.Clues:
                 s.clue_set.create(clue_id=clue.clue_id, clue_num=clue.clue_num, clue_text=clue.clue_text,
-                                  clue_img_url=clue.clue_img_url, parent_list=save_parent_list(clue.clue_parents))
-        ######################################################################
+                                clue_img_url=clue.clue_img_url, parent_clues=save_parent_list(clue.parent_clues))
+        s.save()
+
     return HttpResponseRedirect(reverse('refresh_story'))
-
-
+    
 def storyboard(request):
     return render(request, 'Storyboard.html', context={'title': temp_story.title, 'synopsis': temp_story.synopsis,
                                                        'clues': temp_story.Clues})
@@ -213,7 +251,7 @@ def add_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
         # Adds an empty clue to the end of the stories clue list
@@ -238,7 +276,7 @@ def remove_clue(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            # x.clue_parents = request.POST['clue' + str(x.clue_num) + 'clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
 
             # If the clue has been marked for removal add the clue number to the marked list
             # also add clue id
@@ -296,7 +334,7 @@ def refresh_story(request):
         for x in temp_story.Clues:
             x.clue_text = request.POST['clue' + str(x.clue_num) + '_text']
             x.clue_img_url = request.POST['clue' + str(x.clue_num) + '_img_url']
-            x.clue_parents = request.POST['clue' + str(x.clue_num) + '_clue_parents']
+            x.parent_clues = request.POST['clue' + str(x.clue_num) + '_clue_parents']
         ######################################################################
 
     return HttpResponseRedirect(reverse('storyboard'))
