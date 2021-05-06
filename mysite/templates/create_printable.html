@@ -16,14 +16,20 @@
             text-align: center;
         }
         label.synopsis {
-            font-size: 30px;
+            font-size: 25px;
         }
         label.clue_list {
             font-size: 20px;
             text-align: center;
         }
         p.clue_name {
-            font-size: 25px;
+            font-size: 30px;
+        }
+        label.clue_list {
+            font-size: 20px;
+        }
+        b.child_title {
+            font-size: 20px;
         }
     </style>
 </head>
@@ -38,11 +44,13 @@
             {{title}}
         </label>
     </div>
+    <br/>
     <div class="synopsis">
         <label class="synopsis">
             {{synopsis}}
         </label>
     </div>
+    <br/>
 
 
 
@@ -60,6 +68,25 @@
             rows = "11"
             cols = "100"
             maxlength = "1000">{{clue.clue_text}}</label>
+        <br/>
+        <br/>
+        <b class="child_title">Leads to: </b>
+        <label class="clue_list"
+            type="text"
+            id="clue{{clue.clue_num}}_clue_parents"
+            name="clue{{clue.clue_num}}_clue_parents">
+
+            {% for clue_x in clues %}
+                {% for parent in clue_x.clue_parents %}
+                    <script>
+                        if({{parent}} == {{clue.clue_num}}){
+                            document.write("Clue ",{{clue_x.clue_num}},",")
+                        }
+                    </script>
+                {% endfor %}
+            {% endfor %}
+
+        </label>
 
         <img class="clue_img" src="{{clue.clue_img_url}}" height="170px" align="right">
 
